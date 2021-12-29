@@ -1,0 +1,29 @@
+{
+    "name": "andrijaj/demo_projekat",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Andrija Jelenkovic",
+            "email": "andrija.jelenkovic@logeecom.com"
+        }
+    ],
+    "require": {
+      "ext-json": "*",
+      "ext-pdo": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Amdrija\\RealEstate\\Application\\": "Application",
+            "Amdrija\\RealEstate\\Application\\Interfaces\\": "Application/Interfaces",
+            "Amdrija\\RealEstate\\Application\\Models\\": "Application/Models",
+            "Amdrija\\RealEstate\\Application\\Services\\": "Application/Services",
+            "Amdrija\\RealEstate\\Framework\\": "Framework",
+            "Amdrija\\RealEstate\\Framework\\Exceptions\\": "Framework/Exceptions",
+            "Amdrija\\RealEstate\\Framework\\Responses\\": "Framework/Responses",
+            "Amdrija\\RealEstate\\Application\\Infrastructure\\MySQL\\": "Infrastructure/MySQL",
+            "Amdrija\\RealEstate\\MVC\\": "MVC",
+            "Amdrija\\RealEstate\\MVC\\Controllers\\": "MVC/Controllers",
+            "Amdrija\\RealEstate\\MVC\\Middleware\\": "MVC/Middleware"
+        }
+    }
+}
