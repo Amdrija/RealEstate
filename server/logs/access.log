@@ -1,0 +1,8 @@
+172.19.0.1 - - [27/Dec/2021:12:33:28 +0000] "GET / HTTP/1.1" 500 768 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:96.0) Gecko/20100101 Firefox/96.0"
+172.19.0.1 - - [27/Dec/2021:12:33:28 +0000] "GET /public/css/main.css HTTP/1.1" 200 2115 "http://localhost/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:96.0) Gecko/20100101 Firefox/96.0"
+172.19.0.1 - - [27/Dec/2021:12:33:28 +0000] "GET /public/css/layout.css HTTP/1.1" 200 362 "http://localhost/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:96.0) Gecko/20100101 Firefox/96.0"
+172.19.0.1 - - [27/Dec/2021:12:33:28 +0000] "GET /public/css/navigation.css HTTP/1.1" 200 1728 "http://localhost/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:96.0) Gecko/20100101 Firefox/96.0"
+172.19.0.1 - - [27/Dec/2021:12:33:28 +0000] "GET /public/css/productCard.css HTTP/1.1" 200 1244 "http://localhost/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:96.0) Gecko/20100101 Firefox/96.0"
+172.19.0.1 - - [27/Dec/2021:12:33:28 +0000] "GET /public/css/errorView.css HTTP/1.1" 200 27 "http://localhost/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:96.0) Gecko/20100101 Firefox/96.0"
+172.19.0.1 - - [27/Dec/2021:12:33:28 +0000] "GET /favicon.ico HTTP/1.1" 404 600 "http://localhost/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:96.0) Gecko/20100101 Firefox/96.0"
+172.19.0.1 - - [27/Dec/2021:12:36:52 +0000] "GET / HTTP/1.1" 200 460 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:96.0) Gecko/20100101 Firefox/96.0"
