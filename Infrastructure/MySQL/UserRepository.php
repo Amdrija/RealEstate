@@ -7,19 +7,8 @@ use Amdrija\RealEstate\Application\Models\User;
 use PDO;
 use ReflectionException;
 
-class UserRepository implements IUserRepository
+class UserRepository extends Repository implements IUserRepository
 {
-    private readonly PDO $pdo;
-
-    /**
-     * @param PDO $pdo
-     */
-    public function __construct(PDO $pdo)
-    {
-        $this->pdo = $pdo;
-    }
-
-
     /**
      * @throws ReflectionException
      */
@@ -64,5 +53,13 @@ class UserRepository implements IUserRepository
         $userObject = ModelFactory::constructModel(User::class, $user);
 
         return $userObject;
+    }
+
+    public function saveUser(User $user): User
+    {
+        /* @var $user User*/
+        $user = parent::insert($user);
+
+        return $user;
     }
 }

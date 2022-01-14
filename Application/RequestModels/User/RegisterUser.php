@@ -1,28 +1,25 @@
 <?php
 
-namespace Amdrija\RealEstate\Application\Models;
+namespace Amdrija\RealEstate\Application\RequestModels\User;
 
 use DateTime;
 
-class User extends Entity
+class RegisterUser
 {
-    public function __construct()
-    {
-        parent::__construct();
-        $this->verified = false;
-        $this->isAdministrator = false;
-    }
-
     public string $firstName;
     public string $lastName;
     public string $userName;
     public string $password;
+    public string $confirmedPassword;
     public string $cityId;
     public DateTime $birthDate;
     public string $telephone;
     public string $email;
     public ?string $agencyId;
     public ?int $licenceNumber;
-    public bool $verified;
-    public bool $isAdministrator;
+
+    public function isPasswordConfirmed(): bool
+    {
+        return $this->password === $this->confirmedPassword;
+    }
 }

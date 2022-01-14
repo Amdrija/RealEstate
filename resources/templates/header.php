@@ -2,7 +2,7 @@
     <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar" class="uk-visible@m">
         <nav class="uk-navbar-container uk-background-primary" uk-navbar style="position: relative; z-index: 980;">
             <div class="uk-navbar-left">
-                <a class="uk-navbar-item uk-logo" href="#">Logo</a>
+                <a class="uk-navbar-item uk-logo uk-margin-top-small" href="#"><img src="/vectors/logo.svg" uk-svg class="logo"></a>
                 <ul class="uk-navbar-nav">
                     <li class="uk-active"><a href="#">Active</a></li>
                     <li>
@@ -21,7 +21,7 @@
             </div>
             <div class="uk-navbar-right">
                 <a href="/admin/login" class="uk-button uk-button-default uk-margin-right">Uloguj se</a>
-                <button class="uk-button uk-button-primary uk-margin-right">Registruj se</button>
+                <a href="/register" class="uk-button uk-button-primary uk-margin-right">Registruj se</a>
             </div>
         </nav>
     </div>

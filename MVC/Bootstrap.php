@@ -5,6 +5,7 @@ namespace Amdrija\RealEstate\MVC;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\UserRepository;
 use Amdrija\RealEstate\Application\Interfaces\IUserRepository;
 use Amdrija\RealEstate\Application\Services\LoginService;
+use Amdrija\RealEstate\Application\Services\UserService;
 use Amdrija\RealEstate\Framework\DependencyInjectionContainer;
 use Amdrija\RealEstate\Framework\Router;
 use Amdrija\RealEstate\MVC\Controllers\HomeController;
@@ -30,6 +31,7 @@ class Bootstrap
         DependencyInjectionContainer::registerClass(LoginService::class);
         DependencyInjectionContainer::registerClass(LoginController::class);
         DependencyInjectionContainer::registerClass(HomeController::class);
+        DependencyInjectionContainer::registerClass(UserService::class);
     }
 
     /**
@@ -48,6 +50,16 @@ class Bootstrap
             'POST',
             '/admin/login',
             ['controller' => LoginController::class, 'action' => 'login', 'middleware' => []]
+        );
+        Router::register(
+            'GET',
+            '/register',
+            ['controller' => LoginController::class, 'action' => 'registerIndex', 'middleware' => []]
+        );
+        Router::register(
+            'POST',
+            '/register',
+            ['controller' => LoginController::class, 'action' => 'register', 'middleware' => []]
         );
 
         Router::register(
