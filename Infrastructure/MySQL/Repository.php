@@ -24,17 +24,16 @@ class Repository
         $class = new ReflectionClass($className);
 
         $query = "SELECT  * FROM {$class->getShortName()}";
-        if($count >= 0) {
+        if ($count >= 0) {
             $query .= " LIMIT $count";
         }
 
-        if($offset > 0) {
+        if ($offset > 0) {
             $query .= " OFFSET $offset";
         }
 
         $entities = [];
-        foreach ($this->pdo->query($query)->fetchAll() as $row)
-        {
+        foreach ($this->pdo->query($query)->fetchAll() as $row) {
             $entity = $class->newInstanceWithoutConstructor();
             foreach ($class->getProperties() as $property) {
                 $property->setValue($entity, $row[$property->name]);
@@ -69,14 +68,12 @@ class Repository
         $array = [];
         $class = new ReflectionClass($object);
 
-        foreach ($class->getProperties() as $property)
-        {
+        foreach ($class->getProperties() as $property) {
             if ($property->getType() == \DateTime::class) {
                 $array[$property->name] = $property->getValue($object)->format("Y-m-d");
             } elseif (is_bool($property->getValue($object))) {
                 $array[$property->name] = (int)$property->getValue($object);
-            }
-            else {
+            } else {
                 $array[$property->name] = $property->getValue($object);
             }
 

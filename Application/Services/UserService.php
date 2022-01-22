@@ -23,7 +23,7 @@ class UserService
     /**
      * @throws ConfirmedPasswordMismatchException
      */
-    public function registerUser(RegisterUser $registerUser) : User
+    public function registerUser(RegisterUser $registerUser): User
     {
         if (!$registerUser->isPasswordConfirmed()) {
             throw new ConfirmedPasswordMismatchException();

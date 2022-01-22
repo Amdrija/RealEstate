@@ -3,7 +3,6 @@
 namespace Amdrija\RealEstate\Application\Services;
 
 use Amdrija\RealEstate\Application\Interfaces\ICityRepository;
-use Amdrija\RealEstate\Application\RequestModels\City\CitySelect;
 
 class CityService
 {

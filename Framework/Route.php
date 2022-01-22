@@ -149,8 +149,7 @@ class Route
         $controller = DependencyInjectionContainer::make($this->controllerName);
         $uriParameters = $this->extractURIParameters($request->getURI());
 
-        return empty($uriParameters) ? $controller->{$this->controllerAction}(
-        ) : $controller->{$this->controllerAction}($uriParameters);
+        return empty($uriParameters) ? $controller->{$this->controllerAction}() : $controller->{$this->controllerAction}($uriParameters);
     }
 
     /**

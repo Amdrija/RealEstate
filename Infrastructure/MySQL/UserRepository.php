@@ -18,8 +18,7 @@ class UserRepository extends Repository implements IUserRepository
         $statement->execute(['userName' => $userName]);
 
         $user = $statement->fetch();
-        if ($user == null)
-        {
+        if ($user == null) {
             return null;
         }
 
@@ -44,8 +43,7 @@ class UserRepository extends Repository implements IUserRepository
         $statement->execute(['token' => $token]);
 
         $user = $statement->fetch();
-        if ($user == null)
-        {
+        if ($user == null) {
             return null;
         }
 
@@ -57,7 +55,7 @@ class UserRepository extends Repository implements IUserRepository
 
     public function saveUser(User $user): User
     {
-        /* @var $user User*/
+        /* @var $user User */
         $user = parent::insert($user);
 
         return $user;

@@ -17,10 +17,8 @@ class ModelFactory
         $class = new ReflectionClass($className);
         $object = $class->newInstanceWithoutConstructor();
 
-        foreach ($class->getProperties() as $property)
-        {
-            if ($property->getType()->getName() == DateTime::class)
-            {
+        foreach ($class->getProperties() as $property) {
+            if ($property->getType()->getName() == DateTime::class) {
                 try {
                     $array[$property->name] = new DateTime($array[$property->name]);
                 } catch (Exception) {

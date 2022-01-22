@@ -47,7 +47,8 @@ class ImageService extends FileService
      * @param array $image
      * @return string
      */
-    public function getImageExtension(array $image): string{
+    public function getImageExtension(array $image): string
+    {
         return self::EXTENSION[$image['type']];
     }
 }

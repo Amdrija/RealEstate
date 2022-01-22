@@ -28,8 +28,7 @@ class DependencyInjectionContainer
         $class = new \ReflectionClass(self::$services[$className]);
         $constructor = $class->getConstructor();
 
-        if (is_null($constructor))
-        {
+        if (is_null($constructor)) {
             return new $className;
         }
 
