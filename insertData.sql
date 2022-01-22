@@ -1,22 +1,22 @@
-SET @BeogradId := (SELECT UUID());
-INSERT INTO realEstate.City(id, name) VALUES (@BeogradId, 'Beograd');
+SET @BelgradeId := (SELECT UUID());
+INSERT INTO realEstate.City(id, name) VALUES (@BelgradeId, 'Belgrade');
 
 
 
 SET @VracarId := (SELECT UUID());
-INSERT INTO realEstate.Municipality(id, name, cityId) VALUES (@VracarId, 'Vračar', @BeogradId);
+INSERT INTO realEstate.Municipality(id, name, cityId) VALUES (@VracarId, 'Vračar', @BelgradeId);
 
 SET @NBGId := (SELECT UUID());
-INSERT INTO realEstate.Municipality(id, name, cityId) VALUES (@NBGId, 'Novi Beograd', @BeogradId);
+INSERT INTO realEstate.Municipality(id, name, cityId) VALUES (@NBGId, 'Novi Belgrade', @BelgradeId);
 
 SET @VozdovacId := (SELECT UUID());
-INSERT INTO realEstate.Municipality(id, name, cityId) VALUES (@VozdovacId, 'Voždovac', @BeogradId);
+INSERT INTO realEstate.Municipality(id, name, cityId) VALUES (@VozdovacId, 'Voždovac', @BelgradeId);
 
 SET @SavskiVenacId := (SELECT UUID());
-INSERT INTO realEstate.Municipality(id, name, cityId) VALUES (@SavskiVenacId, 'Savski Venac', @BeogradId);
+INSERT INTO realEstate.Municipality(id, name, cityId) VALUES (@SavskiVenacId, 'Savski Venac', @BelgradeId);
 
 SET @DorcolId := (SELECT UUID());
-INSERT INTO realEstate.Municipality(id, name, cityId) VALUES (@DorcolId, 'Dorćol', @BeogradId);
+INSERT INTO realEstate.Municipality(id, name, cityId) VALUES (@DorcolId, 'Dorćol', @BelgradeId);
 
 
 
@@ -89,19 +89,19 @@ INSERT INTO realEstate.Street(id, name, microLocationId) VALUES
 
 SET @JovanovicNekretnineId = (SELECT UUID());
 INSERT INTO realEstate.Agency(id, name, pib, streetId, number) VALUES
-     (UUID(), 'Agencija Čardak', '1000525443', @BulevarId, 267),
-     (@JovanovicNekretnineId, 'Jovanović nekretnine', '10006587290', @DjindjicId, 105);
+     (UUID(), 'Home Sweet Home', '1000525443', @BulevarId, 267),
+     (@JovanovicNekretnineId, 'Jovanović Real Estate', '10006587290', @DjindjicId, 105);
 
 SET @GoldEstateId = (SELECT UUID());
 INSERT INTO realEstate.Agency(id, name, pib, streetId, number) VALUES
     (@GoldEstateId, 'Gold Estate', '10004396481', @JuzniBulevarId, 4);
 
-INSERT INTO realEstate.ConditionType(name) VALUES ('Izvorno'), ('Renovirano'), ('LUX');
-INSERT INTO realEstate.HeatingType(name) VALUES ('Centralno'), ('Struja'), ('Toplotna pumpa'), ('Pelet'), ('Nafta');
+INSERT INTO realEstate.ConditionType(name) VALUES ('Original'), ('Renovated'), ('LUX');
+INSERT INTO realEstate.HeatingType(name) VALUES ('Central Heating'), ('Electricity'), ('Heat pump'), ('Pellets'), ('Oil');
 INSERT INTO realEstate.Perk(name) VALUES
-    ('Terasa'), ('Podrum'), ('Internet'), ('Lođa'), ('Garaža'), ('Interfon'),
-    ('Francuski balkon'), ('Bašta'), ('Telefon'), ('Lift'), ('Klima');
-INSERT INTO realEstate.EstateType(name) VALUES ('Stan'), ('Kuća');
+    ('Teracce'), ('Basement'), ('Internet'), ('Loggia'), ('Garage'), ('Intercom'),
+    ('French balcony'), ('Garden'), ('Telephone'), ('Elevator'), ('Air conditioning');
+INSERT INTO realEstate.EstateType(name) VALUES ('Apartment'), ('House');
 INSERT INTO realEstate.BusLine(id, name) VALUES
     (UUID(), '2'),(UUID(), '17'),(UUID(), '18'),(UUID(), '19'),
     (UUID(), '21'),(UUID(), '22'),(UUID(), '24'),(UUID(), '25'),
@@ -110,16 +110,16 @@ INSERT INTO realEstate.BusLine(id, name) VALUES
 
 SET @AndrijaId = (SELECT UUID());
 INSERT INTO realEstate.User(id, firstName, lastName, userName, password, cityId, birthDate, telephone, email, agencyId, licenceNumber, verified, isAdministrator) VALUES
-    (@AndrijaId, 'Andrija', 'Jelenković','andrija','$2y$10$unL8TXcXCtzR4bKFM4XezeTNSoTkyGoG1SUOPQzJUtm6YrwkFTnIC', @BeogradId ,'1999-05-25', '+381629762725', 'andrija@email.com', null, null, true, true);
+    (@AndrijaId, 'Andrija', 'Jelenković','andrija','$2y$10$unL8TXcXCtzR4bKFM4XezeTNSoTkyGoG1SUOPQzJUtm6YrwkFTnIC', @BelgradeId ,'1999-05-25', '+381629762725', 'andrija@email.com', null, null, true, true);
 
 SET @NadjaId = (SELECT UUID());
 INSERT INTO realEstate.User(id, firstName, lastName, userName, password, cityId, birthDate, telephone, email, agencyId, licenceNumber, verified, isAdministrator) VALUES
-    (@NadjaId, 'Nadežda', 'Obradović','nadja','$2y$10$unL8TXcXCtzR4bKFM4XezeTNSoTkyGoG1SUOPQzJUtm6YrwkFTnIC', @BeogradId ,'2000-02-25', '+38169762725', 'nadja@email.com', @GoldEstateId, 2560, true, false);
+    (@NadjaId, 'Nadežda', 'Obradović','nadja','$2y$10$unL8TXcXCtzR4bKFM4XezeTNSoTkyGoG1SUOPQzJUtm6YrwkFTnIC', @BelgradeId ,'2000-02-25', '+38169762725', 'nadja@email.com', @GoldEstateId, 2560, true, false);
 
 SET @DjoleId = (SELECT UUID());
 INSERT INTO realEstate.User(id, firstName, lastName, userName, password, cityId, birthDate, telephone, email, agencyId, licenceNumber, verified, isAdministrator) VALUES
-    (@DjoleId, 'Đorđe', 'Dimitrijević','djordje','$2y$10$unL8TXcXCtzR4bKFM4XezeTNSoTkyGoG1SUOPQzJUtm6YrwkFTnIC', @BeogradId ,'1999-05-14', '+38169255725', 'djordje@email.com', @JovanovicNekretnineId, 9780, true, false);
+    (@DjoleId, 'Đorđe', 'Dimitrijević','djordje','$2y$10$unL8TXcXCtzR4bKFM4XezeTNSoTkyGoG1SUOPQzJUtm6YrwkFTnIC', @BelgradeId ,'1999-05-14', '+38169255725', 'djordje@email.com', @JovanovicNekretnineId, 9780, true, false);
 
 SET @DodaId = (SELECT UUID());
 INSERT INTO realEstate.User(id, firstName, lastName, userName, password, cityId, birthDate, telephone, email, agencyId, licenceNumber, verified, isAdministrator) VALUES
-    (@DodaId, 'Dodović', 'Matija','doktoric','$2y$10$unL8TXcXCtzR4bKFM4XezeTNSoTkyGoG1SUOPQzJUtm6YrwkFTnIC', @BeogradId ,'1999-08-19', '+38169555333', 'dodara@email.com', null, null, true, false);
+    (@DodaId, 'Dodović', 'Matija','doktoric','$2y$10$unL8TXcXCtzR4bKFM4XezeTNSoTkyGoG1SUOPQzJUtm6YrwkFTnIC', @BelgradeId ,'1999-08-19', '+38169555333', 'dodara@email.com', null, null, true, false);

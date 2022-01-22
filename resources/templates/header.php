@@ -20,8 +20,8 @@
 
             </div>
             <div class="uk-navbar-right">
-                <a href="/admin/login" class="uk-button uk-button-default uk-margin-right">Uloguj se</a>
-                <a href="/register" class="uk-button uk-button-primary uk-margin-right">Registruj se</a>
+                <a href="/admin/login" class="uk-button uk-button-default uk-margin-right">Sign In</a>
+                <a href="/register" class="uk-button uk-button-primary uk-margin-right">Register</a>
             </div>
         </nav>
     </div>

@@ -1,5 +1,5 @@
 <div class="uk-margin-auto login-modal uk-margin-top">
-    <h1 class="uk-text-center">Registruj se</h1>
+    <h1 class="uk-text-center">Register</h1>
     <?php if (!empty($error)): ?>
         <div class="alert-container">
             <div class="alert-message"><?= $error ?></div>
@@ -8,29 +8,34 @@
     <?php endif; ?>
     <div class="center-content">
         <form method="post">
-            <div class="uk-inline uk-margin-top uk-width-1-1">
+            <label class="" for="username-input">Username</label>
+            <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
                 <span class="uk-form-icon" uk-icon="icon: user"></span>
-                <input class="uk-input uk-width-1-1" type="text" placeholder="Korisničko ime" name="username" required>
+                <input class="uk-input uk-width-1-1" type="text" placeholder="Username" name="username" id="username-input" required>
             </div>
-            <div class="uk-inline uk-margin-top uk-width-1-1">
+            <label class="" for="password-input">Password</label>
+            <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
                 <span class="uk-form-icon uk-form-icon" uk-icon="icon: lock"></span>
-                <input class="uk-input uk-width-1-1" type="password" placeholder="Lozinka" name="password" required>
+                <input class="uk-input uk-width-1-1" type="password" placeholder="Password" id="password-input" name="password" required>
             </div>
 
-            <div class="uk-inline uk-margin-top uk-width-1-1">
+            <label class="" for="confirm-password-input">Confirm password</label>
+            <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
                 <span class="uk-form-icon uk-form-icon" uk-icon="icon: lock"></span>
-                <input class="uk-input uk-width-1-1" type="password" placeholder="Potvrdi lozinku" name="confirmedPassword" required>
+                <input class="uk-input uk-width-1-1" type="password" placeholder="Password" id="confirm-password-input" name="confirmedPassword" required>
             </div>
 
-
-            <div class="uk-inline uk-margin-top uk-width-1-1">
-                <input class="uk-input uk-width-1-1" type="text" placeholder="Ime" name="firstname" required>
+            <label class="" for="firstname-input">First name</label>
+            <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
+                <input class="uk-input uk-width-1-1" type="text" placeholder="First name" id="firstname-input" name="firstname" required>
             </div>
-            <div class="uk-inline uk-margin-top uk-width-1-1">
-                <input class="uk-input uk-width-1-1" type="text" placeholder="Prezime" name="lastname" required>
+            <label class="" for="lastname-input">Last name</label>
+            <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
+                <input class="uk-input uk-width-1-1" type="text" placeholder="Last name" id="lastname-input" name="lastname" required>
             </div>
-            <div class="uk-inline uk-margin-top uk-width-1-1">
-                <select class="uk-select" required name="cityId">
+            <label class="" for="city-input">City</label>
+            <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
+                <select class="uk-select" required name="cityId" id="city-input">
                     <option value="">Izaberi grad...</option>
                     <?php $cities = [['name' => 'Beograd', 'value' => '1'], ['name' => 'Nis', 'value' => '2']] ?>
                     <?php foreach ($cities as $city) {
@@ -38,22 +43,26 @@
                     }?>
                 </select>
             </div>
-            <div class="uk-inline uk-margin-top uk-width-1-1">
+            <label class="" for="birthdate-input">Birth date</label>
+            <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
                 <span class="uk-form-icon uk-form-icon" uk-icon="icon: calendar"></span>
-                <input class="uk-input uk-width-1-1" type="date" placeholder="Datum rodjenja" name="birthDate" required>
+                <input class="uk-input uk-width-1-1" type="date" id="birthdate-input" name="birthDate" required>
             </div>
-            <div class="uk-inline uk-margin-top uk-width-1-1">
+            <label class="" for="phonenumber-input">Phone number</label>
+            <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
                 <span class="uk-form-icon uk-form-icon" uk-icon="icon: phone"></span>
-                <input class="uk-input uk-width-1-1" type="tel" placeholder="Telefon" name="phoneNumber" required>
+                <input class="uk-input uk-width-1-1" type="tel" placeholder="+381 69 555 333" name="phoneNumber" required>
             </div>
-            <div class="uk-inline uk-margin-top uk-width-1-1">
+            <label class="" for="email-input">E-mail</label>
+            <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
                 <span class="uk-form-icon uk-form-icon" uk-icon="icon: mail"></span>
-                <input class="uk-input uk-width-1-1" type="email" placeholder="me@example.com" name="email" required>
+                <input class="uk-input uk-width-1-1" type="email" placeholder="me@example.com" name="email" id="email-input" required>
             </div>
 
 
-            <div class="uk-inline uk-margin-top uk-width-1-1">
-                <select class="uk-select" name="agencyId">
+            <label class="" for="agency-input">Agency</label>
+            <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
+                <select class="uk-select" name="agencyId" id="agency-input">
                     <option value="">Izaberi grad...</option>
                     <?php $agencies = [['name' => 'Agencija1', 'value' => '1'], ['name' => 'Agencija2', 'value' => '2']] ?>
                     <?php foreach ($agencies as $agency) {
@@ -61,9 +70,10 @@
                     }?>
                 </select>
             </div>
-            <div class="uk-inline uk-margin-top uk-width-1-1">
+            <label class="" for="licencenumber-input">Licence number</label>
+            <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
                 <span class="uk-form-icon" uk-icon="icon: user"></span>
-                <input class="uk-input uk-width-1-1" type="text" placeholder="Broj licence" name="licenceNumber" required>
+                <input class="uk-input uk-width-1-1" type="text" placeholder="555333" name="licenceNumber" required>
             </div>
 
             <input type="submit" class="uk-button uk-button-primary uk-margin-top" value="Registruj se">
