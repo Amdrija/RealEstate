@@ -19,6 +19,32 @@ class Repository
         $this->pdo = $pdo;
     }
 
+    public function getList(string $className, int $count = -1, int $offset = 0): array
+    {
+        $class = new ReflectionClass($className);
+
+        $query = "SELECT  * FROM {$class->getShortName()}";
+        if($count >= 0) {
+            $query .= " LIMIT $count";
+        }
+
+        if($offset > 0) {
+            $query .= " OFFSET $offset";
+        }
+
+        $entities = [];
+        foreach ($this->pdo->query($query)->fetchAll() as $row)
+        {
+            $entity = $class->newInstanceWithoutConstructor();
+            foreach ($class->getProperties() as $property) {
+                $property->setValue($entity, $row[$property->name]);
+            }
+
+            $entities[] = $entity;
+        }
+        return $entities;
+    }
+
     public function insert(Entity $entity): Entity
     {
         $statement = $this->pdo->prepare(self::getInsertQuery($entity));

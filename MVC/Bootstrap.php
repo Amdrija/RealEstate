@@ -2,8 +2,14 @@
 
 namespace Amdrija\RealEstate\MVC;
 
+use Amdrija\RealEstate\Application\Infrastructure\MySQL\AgencyRepository;
+use Amdrija\RealEstate\Application\Infrastructure\MySQL\CityRepository;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\UserRepository;
+use Amdrija\RealEstate\Application\Interfaces\IAgencyRepository;
+use Amdrija\RealEstate\Application\Interfaces\ICityRepository;
 use Amdrija\RealEstate\Application\Interfaces\IUserRepository;
+use Amdrija\RealEstate\Application\Services\AgencyService;
+use Amdrija\RealEstate\Application\Services\CityService;
 use Amdrija\RealEstate\Application\Services\LoginService;
 use Amdrija\RealEstate\Application\Services\UserService;
 use Amdrija\RealEstate\Framework\DependencyInjectionContainer;
@@ -27,11 +33,30 @@ class Bootstrap
 
     public static function RegisterDependencies()
     {
-        DependencyInjectionContainer::register(IUserRepository::class, UserRepository::class);
-        DependencyInjectionContainer::registerClass(LoginService::class);
+        self::RegisterControllers();
+        self::RegisterServices();
+        self::RegisterRepositories();
+    }
+
+    public static function RegisterControllers()
+    {
         DependencyInjectionContainer::registerClass(LoginController::class);
         DependencyInjectionContainer::registerClass(HomeController::class);
+    }
+
+    public static function RegisterServices()
+    {
+        DependencyInjectionContainer::registerClass(LoginService::class);
         DependencyInjectionContainer::registerClass(UserService::class);
+        DependencyInjectionContainer::registerClass(CityService::class);
+        DependencyInjectionContainer::registerClass(AgencyService::class);
+    }
+
+    public static function RegisterRepositories()
+    {
+        DependencyInjectionContainer::register(IUserRepository::class, UserRepository::class);
+        DependencyInjectionContainer::register(ICityRepository::class, CityRepository::class);
+        DependencyInjectionContainer::register(IAgencyRepository::class, AgencyRepository::class);
     }
 
     /**
@@ -43,12 +68,12 @@ class Bootstrap
         /* Login routes */
         Router::register(
             'GET',
-            '/admin/login',
+            '/login',
             ['controller' => LoginController::class, 'action' => 'index', 'middleware' => []]
         );
         Router::register(
             'POST',
-            '/admin/login',
+            '/login',
             ['controller' => LoginController::class, 'action' => 'login', 'middleware' => []]
         );
         Router::register(

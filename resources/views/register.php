@@ -1,6 +1,13 @@
+<?php
+/* @var $cities array*/
+/* @var $agencies array*/
+?>
 <div class="uk-margin-auto login-modal uk-margin-top">
     <h1 class="uk-text-center">Register</h1>
-    <?php if (!empty($error)): ?>
+    <?php use Amdrija\RealEstate\Application\Models\Agency;
+    use Amdrija\RealEstate\Application\Models\City;
+
+    if (!empty($error)): ?>
         <div class="alert-container">
             <div class="alert-message"><?= $error ?></div>
             <div class="alert-button">×</div>
@@ -36,10 +43,10 @@
             <label class="" for="city-input">City</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
                 <select class="uk-select" required name="cityId" id="city-input">
-                    <option value="">Izaberi grad...</option>
-                    <?php $cities = [['name' => 'Beograd', 'value' => '1'], ['name' => 'Nis', 'value' => '2']] ?>
+                    <option value="">Choose city...</option>
                     <?php foreach ($cities as $city) {
-                        echo "<option value=\"{$city['value']}\">{$city['name']}</option>";
+                        /* @var $city City*/
+                        echo "<option value=\"{$city->id}\">{$city->name}</option>";
                     }?>
                 </select>
             </div>
@@ -63,10 +70,10 @@
             <label class="" for="agency-input">Agency</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
                 <select class="uk-select" name="agencyId" id="agency-input">
-                    <option value="">Izaberi grad...</option>
-                    <?php $agencies = [['name' => 'Agencija1', 'value' => '1'], ['name' => 'Agencija2', 'value' => '2']] ?>
+                    <option value="">Choose agency...</option>
                     <?php foreach ($agencies as $agency) {
-                        echo "<option value=\"{$agency['value']}\">{$agency['name']}</option>";
+                        /* @var $agency Agency*/
+                        echo "<option value=\"{$agency->id}\">{$agency->name}</option>";
                     }?>
                 </select>
             </div>

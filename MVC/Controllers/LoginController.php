@@ -4,6 +4,8 @@ namespace Amdrija\RealEstate\MVC\Controllers;
 
 use Amdrija\RealEstate\Application\Exceptions\User\ConfirmedPasswordMismatchException;
 use Amdrija\RealEstate\Application\RequestModels\User\RegisterUser;
+use Amdrija\RealEstate\Application\Services\AgencyService;
+use Amdrija\RealEstate\Application\Services\CityService;
 use Amdrija\RealEstate\Application\Services\LoginService;
 use Amdrija\RealEstate\Application\Services\UserService;
 use Amdrija\RealEstate\Framework\Responses\ErrorResponseFactory;
@@ -16,17 +18,23 @@ class LoginController extends FrontController
 {
     private LoginService $loginService;
     private UserService $userService;
+    private CityService $cityService;
+    private AgencyService $agencyService;
 
     /**
      * LoginController constructor.
      * @param LoginService $loginService
      * @param UserService $userService
+     * @param CityService $cityService
+     * @param AgencyService $agencyService
      */
-    public function __construct(LoginService $loginService, UserService $userService)
+    public function __construct(LoginService $loginService, UserService $userService, CityService $cityService, AgencyService $agencyService)
     {
         parent::__construct();
         $this->loginService = $loginService;
         $this->userService = $userService;
+        $this->cityService = $cityService;
+        $this->agencyService = $agencyService;
     }
 
     /**
@@ -54,7 +62,8 @@ class LoginController extends FrontController
             return new RedirectResponse('/admin');
         }
 
-        return $this->buildHtmlResponse('register', ['title' => 'Register']);
+        return $this->buildHtmlResponse('register',
+            ['title' => 'Register', 'cities' => $this->cityService->getCitiesForSelect(), 'agencies' => $this->agencyService->getAgenciesForSelect()]);
     }
 
     /**
