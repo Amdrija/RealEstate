@@ -4,7 +4,7 @@ namespace Amdrija\RealEstate\Application\Infrastructure\MySQL;
 
 use Amdrija\RealEstate\Application\Interfaces\IUserRepository;
 use Amdrija\RealEstate\Application\Models\User;
-use PDO;
+use Amdrija\RealEstate\Framework\ArraySerializer;
 use ReflectionException;
 
 class UserRepository extends Repository implements IUserRepository
@@ -23,7 +23,7 @@ class UserRepository extends Repository implements IUserRepository
         }
 
         /** @var User $userObject */
-        $userObject = ModelFactory::constructModel(User::class, $user);
+        $userObject = ArraySerializer::deserialize(User::class, $user);
 
         return $userObject;
     }
@@ -48,7 +48,7 @@ class UserRepository extends Repository implements IUserRepository
         }
 
         /** @var User $userObject */
-        $userObject = ModelFactory::constructModel(User::class, $user);
+        $userObject = ArraySerializer::deserialize(User::class, $user);
 
         return $userObject;
     }

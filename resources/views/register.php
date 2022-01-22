@@ -8,9 +8,9 @@
     use Amdrija\RealEstate\Application\Models\City;
 
     if (!empty($error)): ?>
-        <div class="alert-container">
-            <div class="alert-message"><?= $error ?></div>
-            <div class="alert-button">×</div>
+        <div uk-alert class="uk-alert-danger">
+            <a class="uk-alert-close" uk-close></a>
+            <p><?= $error ?></p>
         </div>
     <?php endif; ?>
     <div class="center-content">
@@ -18,7 +18,7 @@
             <label class="" for="username-input">Username</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
                 <span class="uk-form-icon" uk-icon="icon: user"></span>
-                <input class="uk-input uk-width-1-1" type="text" placeholder="Username" name="username" id="username-input" required>
+                <input class="uk-input uk-width-1-1" type="text" placeholder="Username" name="userName" id="username-input" required>
             </div>
             <label class="" for="password-input">Password</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
@@ -34,11 +34,11 @@
 
             <label class="" for="firstname-input">First name</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
-                <input class="uk-input uk-width-1-1" type="text" placeholder="First name" id="firstname-input" name="firstname" required>
+                <input class="uk-input uk-width-1-1" type="text" placeholder="First name" id="firstname-input" name="firstName" required>
             </div>
             <label class="" for="lastname-input">Last name</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
-                <input class="uk-input uk-width-1-1" type="text" placeholder="Last name" id="lastname-input" name="lastname" required>
+                <input class="uk-input uk-width-1-1" type="text" placeholder="Last name" id="lastname-input" name="lastName" required>
             </div>
             <label class="" for="city-input">City</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
@@ -58,7 +58,7 @@
             <label class="" for="phonenumber-input">Phone number</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
                 <span class="uk-form-icon uk-form-icon" uk-icon="icon: phone"></span>
-                <input class="uk-input uk-width-1-1" type="tel" placeholder="+381 69 555 333" name="phoneNumber" required>
+                <input class="uk-input uk-width-1-1" type="tel" placeholder="+381 69 555 333" name="telephone" required>
             </div>
             <label class="" for="email-input">E-mail</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
@@ -80,7 +80,7 @@
             <label class="" for="licencenumber-input">Licence number</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
                 <span class="uk-form-icon" uk-icon="icon: user"></span>
-                <input class="uk-input uk-width-1-1" type="text" placeholder="555333" name="licenceNumber" required>
+                <input class="uk-input uk-width-1-1" type="text" placeholder="555333" name="licenceNumber">
             </div>
 
             <input type="submit" class="uk-button uk-button-primary uk-margin-top" value="Registruj se">

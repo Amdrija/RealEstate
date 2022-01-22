@@ -13,6 +13,7 @@ use Amdrija\RealEstate\Framework\Responses\HTMLResponse;
 use Amdrija\RealEstate\Framework\Responses\JSONResponse;
 use Amdrija\RealEstate\Framework\Responses\RedirectResponse;
 use Amdrija\RealEstate\Framework\Responses\Response;
+use Exception;
 
 class LoginController extends FrontController
 {
@@ -93,11 +94,16 @@ class LoginController extends FrontController
     public function register(): Response
     {
         try {
-            $this->userService->registerUser(new RegisterUser());
-        } catch (ConfirmedPasswordMismatchException $exception) {
-            return ErrorResponseFactory::getResponse("Potvrđena lozinka i lozinka nisu iste.", 400);
+            $this->userService->registerUser($this->request->deseralizeBody(RegisterUser::class));
+        } catch (Exception $exception) {
+            return $this->buildHtmlResponse('register',
+                ['title' => 'Register',
+                    'cities' => $this->cityService->getCitiesForSelect(),
+                    'agencies' => $this->agencyService->getAgenciesForSelect(),
+                    'error' => $exception->getMessage()]
+            );
         }
 
-        return new JSONResponse([]);
+        return new RedirectResponse("/login");
     }
 }

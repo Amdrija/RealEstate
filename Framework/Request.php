@@ -67,6 +67,11 @@ class Request
         return $this->body;
     }
 
+    public function deseralizeBody(string $className): object
+    {
+        return ArraySerializer::deserialize($className, $this->getBody());
+    }
+
     /**
      * Returns the value of the specified body parameter.
      * @param string $parameter

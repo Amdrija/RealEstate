@@ -3,6 +3,7 @@
 namespace Amdrija\RealEstate\Application\Infrastructure\MySQL;
 
 use Amdrija\RealEstate\Application\Models\Entity;
+use Amdrija\RealEstate\Framework\ArraySerializer;
 use Carbon\Traits\Date;
 use PDO;
 use ReflectionClass;
@@ -34,12 +35,7 @@ class Repository
 
         $entities = [];
         foreach ($this->pdo->query($query)->fetchAll() as $row) {
-            $entity = $class->newInstanceWithoutConstructor();
-            foreach ($class->getProperties() as $property) {
-                $property->setValue($entity, $row[$property->name]);
-            }
-
-            $entities[] = $entity;
+            $entities[] = ArraySerializer::deserialize($className, $row);
         }
         return $entities;
     }

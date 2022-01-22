@@ -1,18 +1,18 @@
 <?php
 
-namespace Amdrija\RealEstate\Application\Infrastructure\MySQL;
+namespace Amdrija\RealEstate\Framework;
 
 use DateTime;
 use Exception;
 use ReflectionClass;
 use ReflectionException;
 
-class ModelFactory
+class ArraySerializer
 {
     /**
      * @throws ReflectionException
      */
-    public static function constructModel(string $className, array $array): object
+    public static function deserialize(string $className, array $array): object
     {
         $class = new ReflectionClass($className);
         $object = $class->newInstanceWithoutConstructor();

@@ -39,10 +39,11 @@ class UserService
         $user->lastName = $registerUser->lastName;
         $user->password = password_hash($registerUser->password, PASSWORD_DEFAULT);
         $user->telephone = $registerUser->password;
-        $user->verified = true;
+        $user->verified = false;
         $user->agencyId = $registerUser->agencyId;
         $user->licenceNumber = $registerUser->licenceNumber;
 
+        //TODO: Check for taken username and email exceptions.
         return $this->userRepository->saveUser($user);
     }
 }
