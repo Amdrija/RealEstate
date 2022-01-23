@@ -25,6 +25,11 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
+    public function getUserById(string $id): ?User
+    {
+        return $this->userRepository->getUserById($id);
+    }
+
     public function listUsers(array $queryParameters): PaginatedResponse
     {
         $userCount = $this->userRepository->getUserCount();

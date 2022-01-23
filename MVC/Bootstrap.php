@@ -116,5 +116,11 @@ class Bootstrap
             '/admin/users',
             ['controller' => UserController::class, 'action' => 'userList', 'middleware' => [AdminMiddleware::class]]
         );
+
+        Router::register(
+            'GET',
+            '/admin/users/{:id}',
+            ['controller' => UserController::class, 'action' => 'getUserById', 'middleware' => [AdminMiddleware::class]]
+        );
     }
 }
