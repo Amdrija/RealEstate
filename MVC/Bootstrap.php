@@ -114,7 +114,18 @@ class Bootstrap
         Router::register(
         'POST',
         '/user/edit',
-        ['controller' => UserController::class, 'action' => 'editContact', 'middleware' => [AuthenticationMiddleware::class]]
+            ['controller' => UserController::class, 'action' => 'editContact', 'middleware' => [AuthenticationMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/user/edit/password',
+            ['controller' => UserController::class, 'action' => 'editPasswordIndex', 'middleware' => [AuthenticationMiddleware::class]]
+        );
+        Router::register(
+        'POST',
+        '/user/edit/password',
+        ['controller' => UserController::class, 'action' => 'editPassword', 'middleware' => [AuthenticationMiddleware::class]]
     );
     }
 

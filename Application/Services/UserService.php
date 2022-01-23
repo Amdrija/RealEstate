@@ -152,4 +152,35 @@ class UserService
 
         return $this->userRepository->editUser($user);
     }
+
+    /**
+     * @param EditUserContact $editUser
+     * @param User $oldUser
+     * @return User
+     * @throws EmailTakenException
+     * @throws UsernameTakenException
+     */
+    public function editPassword(string $newPassword, string $confirmPassword, User $oldUser): User
+    {
+        if ($newPassword != $confirmPassword) {
+            throw new ConfirmedPasswordMismatchException();
+        }
+
+        $user = new User();
+        $user->id = $oldUser->id;
+        $user->password = password_hash($newPassword, PASSWORD_DEFAULT);
+        $user->userName = $oldUser->userName;
+        $user->birthDate = $oldUser->birthDate;
+        $user->cityId = $oldUser->cityId;
+        $user->email = $oldUser->email;
+        $user->firstName = $oldUser->firstName;
+        $user->isAdministrator = $oldUser->isAdministrator;
+        $user->lastName = $oldUser->lastName;
+        $user->telephone = $oldUser->telephone;
+        $user->verified = $oldUser->verified;
+        $user->agencyId = $oldUser->agencyId;
+        $user->licenceNumber = $oldUser->licenceNumber;
+
+        return $this->userRepository->editUser($user);
+    }
 }

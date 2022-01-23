@@ -8,6 +8,7 @@ use Amdrija\RealEstate\Application\RequestModels\User\EditUserContact;
 use Amdrija\RealEstate\Application\RequestModels\User\RegisterUser;
 use Amdrija\RealEstate\Application\Services\AgencyService;
 use Amdrija\RealEstate\Application\Services\CityService;
+use Amdrija\RealEstate\Application\Services\LoginService;
 use Amdrija\RealEstate\Application\Services\UserService;
 use Amdrija\RealEstate\Framework\ArraySerializer;
 use Amdrija\RealEstate\Framework\Responses\ErrorResponseFactory;
@@ -21,13 +22,15 @@ class UserController extends FrontController
     private readonly UserService $userService;
     private readonly CityService $cityService;
     private readonly AgencyService $agencyService;
+    private readonly LoginService $loginService;
 
-    public function __construct(UserService $userService, CityService $cityService, AgencyService $agencyService)
+    public function __construct(UserService $userService, CityService $cityService, AgencyService $agencyService, LoginService $loginService)
     {
         parent::__construct();
         $this->userService = $userService;
         $this->cityService = $cityService;
         $this->agencyService = $agencyService;
+        $this->loginService = $loginService;
     }
 
     public function userList(): Response
@@ -114,7 +117,7 @@ class UserController extends FrontController
 
     public function editContactIndex(): Response
     {
-        return $this->buildHtmlResponse("editUserContact", ['title' => 'Edit Contact',
+        return $this->buildHtmlResponse("editUserContact", ['title' => 'Edit Profile',
             'user' => $this->userService->getUserById($_SESSION['userId']),
             'cities' => $this->cityService->getCitiesForSelect(),
             'agencies' => $this->agencyService->getAgenciesForSelect()]);
@@ -143,5 +146,37 @@ class UserController extends FrontController
                 'user' => $user,
                 'cities' => $this->cityService->getCitiesForSelect(),
                 'agencies' => $this->agencyService->getAgenciesForSelect()]);
+    }
+
+    public function editPasswordIndex(): Response
+    {
+        return $this->buildHtmlResponse("editPassword", ['title' => 'Change Password']);
+    }
+
+    public function editPassword(): Response
+    {
+        $user = $this->userService->getUserById($_SESSION['userId']);
+        if(!isset($this->request->getBody()['oldPassword']) || !$this->loginService->logIn(
+            $user->userName,
+            $this->request->getBodyParameter('oldPassword'),
+            false))
+        {
+            $this->loginService->logOut();
+            return new RedirectResponse('/login');
+        }
+
+        try {
+            $this->userService->editPassword($this->request->getBodyParameter('newPassword'), $this->request->getBodyParameter('confirmedPassword'), $user);
+        } catch (Exception $exception) {
+            return $this->buildHtmlResponse('register',
+                ['title' => 'Register',
+                    'cities' => $this->cityService->getCitiesForSelect(),
+                    'agencies' => $this->agencyService->getAgenciesForSelect(),
+                    'error' => $exception->getMessage()]
+            );
+        }
+
+        $this->loginService->logOut();
+        return new RedirectResponse("/login");
     }
 }
