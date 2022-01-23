@@ -47,7 +47,7 @@ class UserService
      * @throws EmailTakenException
      * @throws UsernameTakenException|LicenceNumberRequiredForAgentException
      */
-    public function registerUser(RegisterUser $registerUser): User
+    public function registerUser(RegisterUser $registerUser, bool $isAdministrator = false, bool $verified = false): User
     {
         if (!$registerUser->isPasswordConfirmed()) {
             throw new ConfirmedPasswordMismatchException();
@@ -59,11 +59,11 @@ class UserService
         $user->cityId = $registerUser->cityId;
         $user->email = $registerUser->email;
         $user->firstName = $registerUser->firstName;
-        $user->isAdministrator = false;
+        $user->isAdministrator = $isAdministrator;
         $user->lastName = $registerUser->lastName;
         $user->password = password_hash($registerUser->password, PASSWORD_DEFAULT);
         $user->telephone = $registerUser->telephone;
-        $user->verified = false;
+        $user->verified = $verified;
         if ($registerUser->agencyId != ""){
             $user->agencyId = $registerUser->agencyId;
             if ($registerUser->licenceNumber == 0) {

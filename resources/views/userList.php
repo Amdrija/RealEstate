@@ -20,7 +20,7 @@ use Amdrija\RealEstate\Application\RequestModels\PaginatedResponse;
     <tbody>
     <?php /* @var $user User*/?>
     <?php foreach($paginatedResponse->data as $user):?>
-        <tr ondblclick="window.location='/admin/users/<?= $user->id?>'">
+        <tr class="" ondblclick="window.location='/admin/users/edit/<?= $user->id?>'">
             <td><input class="uk-checkbox" type="checkbox"></td>
             <td><?= $user->userName?></td>
             <td><?= $user->email?></td>
@@ -28,9 +28,9 @@ use Amdrija\RealEstate\Application\RequestModels\PaginatedResponse;
             <td class="uk-text-center"><input class="uk-checkbox" type="checkbox" <?= $user->isAdministrator ? "checked" : ""?> disabled></td>
         </tr>
     <?php endforeach; ?>
-
     </tbody>
 </table>
+    <a href="/admin/users/add"><div class="uk-card uk-card-hover uk-text-center uk-padding-small uk-text-large">+</div></a>
 
 
 <?php include __DIR__ . '/../templates/pagination.php' ?>

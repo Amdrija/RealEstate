@@ -4,6 +4,7 @@ namespace Amdrija\RealEstate\MVC\Controllers;
 
 use Amdrija\RealEstate\Application\RequestModels\Pagination;
 use Amdrija\RealEstate\Application\RequestModels\User\EditUser;
+use Amdrija\RealEstate\Application\RequestModels\User\RegisterUser;
 use Amdrija\RealEstate\Application\Services\AgencyService;
 use Amdrija\RealEstate\Application\Services\CityService;
 use Amdrija\RealEstate\Application\Services\UserService;
@@ -47,6 +48,31 @@ class UserController extends FrontController
                 'user' => $user,
                 'cities' => $this->cityService->getCitiesForSelect(),
                 'agencies' => $this->agencyService->getAgenciesForSelect()]);
+    }
+
+    public function addUserIndex(): Response
+    {
+        return $this->buildHtmlResponse("addUser", ['title' => 'Add User',
+            'cities' => $this->cityService->getCitiesForSelect(),
+            'agencies' => $this->agencyService->getAgenciesForSelect()]);
+    }
+
+    public function addUser(): Response
+    {
+        $isAdministrator = isset($this->request->getBody()['isAdministrator']);
+        $verified = isset($this->request->getBody()['verified']);
+        try {
+            $user = $this->userService->registerUser($this->request->deseralizeBody(RegisterUser::class), $isAdministrator, $verified);
+        } catch (Exception $exception) {
+            return $this->buildHtmlResponse('user',
+                ['title' => 'Register',
+                    'cities' => $this->cityService->getCitiesForSelect(),
+                    'agencies' => $this->agencyService->getAgenciesForSelect(),
+                    'error' => $exception->getMessage()]
+            );
+        }
+
+        return new RedirectResponse("/admin/users/edit/{$user->id}");
     }
 
     public function editUser(array $parameters): Response

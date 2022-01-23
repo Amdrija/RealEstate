@@ -119,19 +119,32 @@ class Bootstrap
 
         Router::register(
             'GET',
-            '/admin/users/{:id}',
+            '/admin/users/edit/{:id}',
             ['controller' => UserController::class, 'action' => 'getUserById', 'middleware' => [AdminMiddleware::class]]
         );
 
         Router::register(
             'POST',
-            '/admin/users/{:id}',
+            '/admin/users/edit/{:id}',
             ['controller' => UserController::class, 'action' => 'editUser', 'middleware' => [AdminMiddleware::class]]
         );
         Router::register(
             'POST',
-            '/admin/users/{:id}/delete',
+            '/admin/users/delete/{:id}',
             ['controller' => UserController::class, 'action' => 'deleteUser', 'middleware' => [AdminMiddleware::class]]
+        );
+
+        Router::register(
+            'POST',
+            '/admin/users/add',
+            ['controller' => UserController::class, 'action' => 'addUser', 'middleware' => [AdminMiddleware::class]]
+        );
+
+
+        Router::register(
+            'GET',
+            '/admin/users/add',
+            ['controller' => UserController::class, 'action' => 'addUserIndex', 'middleware' => [AdminMiddleware::class]]
         );
     }
 }
