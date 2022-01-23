@@ -8,6 +8,8 @@ use Amdrija\RealEstate\Application\Exceptions\User\LicenceNumberRequiredForAgent
 use Amdrija\RealEstate\Application\Exceptions\User\UsernameTakenException;
 use Amdrija\RealEstate\Application\Interfaces\IUserRepository;
 use Amdrija\RealEstate\Application\Models\User;
+use Amdrija\RealEstate\Application\RequestModels\PaginatedResponse;
+use Amdrija\RealEstate\Application\RequestModels\Pagination;
 use Amdrija\RealEstate\Application\RequestModels\User\RegisterUser;
 use DateTime;
 
@@ -23,12 +25,21 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
+    public function listUsers(array $queryParameters): PaginatedResponse
+    {
+        $userCount = $this->userRepository->getUserCount();
+        $pagination = Pagination::create($queryParameters, $userCount);
+
+        return new PaginatedResponse($pagination,
+            $this->userRepository->getUsers($pagination->pageSize, $pagination->getOffset()));
+    }
+
     /**
      * @param RegisterUser $registerUser
      * @return User
      * @throws ConfirmedPasswordMismatchException
      * @throws EmailTakenException
-     * @throws UsernameTakenException
+     * @throws UsernameTakenException|LicenceNumberRequiredForAgentException
      */
     public function registerUser(RegisterUser $registerUser): User
     {

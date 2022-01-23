@@ -78,4 +78,14 @@ class UserRepository extends Repository implements IUserRepository
 
         return $user;
     }
+
+    public function getUsers(int $count = -1, int $offset = 0): array
+    {
+        return $this->getList(User::class, $count, $offset);
+    }
+
+    public function getUserCount(): int
+    {
+        return $this->getCount(User::class);
+    }
 }

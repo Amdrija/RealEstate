@@ -14,6 +14,7 @@ use Amdrija\RealEstate\Application\Services\LoginService;
 use Amdrija\RealEstate\Application\Services\UserService;
 use Amdrija\RealEstate\Framework\DependencyInjectionContainer;
 use Amdrija\RealEstate\Framework\Router;
+use Amdrija\RealEstate\MVC\Controllers\AdminController;
 use Amdrija\RealEstate\MVC\Controllers\HomeController;
 use Amdrija\RealEstate\MVC\Controllers\LoginController;
 use Exception;
@@ -28,6 +29,7 @@ class Bootstrap
     {
         session_start();
         self::initializeAdminRoutes();
+        self::initializeRoutes();
         self::RegisterDependencies();
     }
 
@@ -42,6 +44,7 @@ class Bootstrap
     {
         DependencyInjectionContainer::registerClass(LoginController::class);
         DependencyInjectionContainer::registerClass(HomeController::class);
+        DependencyInjectionContainer::registerClass(AdminController::class);
     }
 
     public static function RegisterServices()
@@ -59,11 +62,7 @@ class Bootstrap
         DependencyInjectionContainer::register(IAgencyRepository::class, AgencyRepository::class);
     }
 
-    /**
-     * Initializes Admin routes.
-     * @throws Exception
-     */
-    private static function initializeAdminRoutes()
+    private static function initializeRoutes()
     {
         /* Login routes */
         Router::register(
@@ -91,6 +90,19 @@ class Bootstrap
             'GET',
             '/',
             ['controller' => HomeController::class, 'action' => 'index', 'middleware' => []]
+        );
+    }
+
+    /**
+     * Initializes Admin routes.
+     * @throws Exception
+     */
+    private static function initializeAdminRoutes()
+    {
+        Router::register(
+            'GET',
+            '/admin/users',
+            ['controller' => AdminController::class, 'action' => 'userList', 'middleware' => []]
         );
     }
 }

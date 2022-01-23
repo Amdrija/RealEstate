@@ -20,11 +20,18 @@ class Repository
         $this->pdo = $pdo;
     }
 
-    public function getList(string $className, int $count = -1, int $offset = 0): array
+    public function getCount(string $className)
+    {
+        $class = new ReflectionClass($className);
+        return $this->pdo->query("SELECT COUNT(*) FROM {$class->getShortName()}")->fetchColumn();
+    }
+
+    public function getList(string $className,int $count = -1, int $offset = 0): array
     {
         $class = new ReflectionClass($className);
 
         $query = "SELECT  * FROM {$class->getShortName()}";
+
         if ($count >= 0) {
             $query .= " LIMIT $count";
         }
