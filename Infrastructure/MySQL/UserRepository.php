@@ -2,6 +2,8 @@
 
 namespace Amdrija\RealEstate\Application\Infrastructure\MySQL;
 
+use Amdrija\RealEstate\Application\Exceptions\User\EmailTakenException;
+use Amdrija\RealEstate\Application\Exceptions\User\UsernameTakenException;
 use Amdrija\RealEstate\Application\Interfaces\IUserRepository;
 use Amdrija\RealEstate\Application\Models\User;
 use Amdrija\RealEstate\Framework\ArraySerializer;
@@ -53,10 +55,26 @@ class UserRepository extends Repository implements IUserRepository
         return $userObject;
     }
 
+    /**
+     * @throws UsernameTakenException
+     * @throws EmailTakenException
+     */
     public function saveUser(User $user): User
     {
         /* @var $user User */
-        $user = parent::insert($user);
+        try {
+            $user = parent::insert($user);
+        } catch (\PDOException $e) {
+            if (str_contains($e->getMessage(), "userName")) {
+                throw new UsernameTakenException();
+            }
+
+            if (str_contains($e->getMessage(), "email")) {
+                throw new EmailTakenException($user->email);
+            }
+
+            throw $e;
+        }
 
         return $user;
     }

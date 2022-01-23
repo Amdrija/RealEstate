@@ -2,6 +2,8 @@
 
 namespace Amdrija\RealEstate\Application\Interfaces;
 
+use Amdrija\RealEstate\Application\Exceptions\User\EmailTakenException;
+use Amdrija\RealEstate\Application\Exceptions\User\UsernameTakenException;
 use Amdrija\RealEstate\Application\Models\User;
 
 interface IUserRepository
@@ -12,5 +14,9 @@ interface IUserRepository
 
     public function getUserByToken(string $token): ?User;
 
+    /**
+     * @throws UsernameTakenException
+     * @throws EmailTakenException
+     */
     public function saveUser(User $user): User;
 }

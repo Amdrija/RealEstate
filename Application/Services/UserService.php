@@ -3,6 +3,9 @@
 namespace Amdrija\RealEstate\Application\Services;
 
 use Amdrija\RealEstate\Application\Exceptions\User\ConfirmedPasswordMismatchException;
+use Amdrija\RealEstate\Application\Exceptions\User\EmailTakenException;
+use Amdrija\RealEstate\Application\Exceptions\User\LicenceNumberRequiredForAgentException;
+use Amdrija\RealEstate\Application\Exceptions\User\UsernameTakenException;
 use Amdrija\RealEstate\Application\Interfaces\IUserRepository;
 use Amdrija\RealEstate\Application\Models\User;
 use Amdrija\RealEstate\Application\RequestModels\User\RegisterUser;
@@ -21,7 +24,11 @@ class UserService
     }
 
     /**
+     * @param RegisterUser $registerUser
+     * @return User
      * @throws ConfirmedPasswordMismatchException
+     * @throws EmailTakenException
+     * @throws UsernameTakenException
      */
     public function registerUser(RegisterUser $registerUser): User
     {
@@ -40,10 +47,17 @@ class UserService
         $user->password = password_hash($registerUser->password, PASSWORD_DEFAULT);
         $user->telephone = $registerUser->password;
         $user->verified = false;
-        $user->agencyId = $registerUser->agencyId;
-        $user->licenceNumber = $registerUser->licenceNumber;
+        if ($registerUser->agencyId != ""){
+            $user->agencyId = $registerUser->agencyId;
+            if ($registerUser->licenceNumber == 0) {
+                throw new LicenceNumberRequiredForAgentException();
+            }
+            $user->licenceNumber = $registerUser->licenceNumber;
+        } else {
+            $user->agencyId = null;
+            $user->licenceNumber = null;
+        }
 
-        //TODO: Check for taken username and email exceptions.
         return $this->userRepository->saveUser($user);
     }
 }

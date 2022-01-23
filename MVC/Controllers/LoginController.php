@@ -90,7 +90,6 @@ class LoginController extends FrontController
         return new RedirectResponse('/admin');
     }
 
-    //TODO ADD Seriializer
     public function register(): Response
     {
         try {
