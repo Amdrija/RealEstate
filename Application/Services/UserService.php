@@ -11,6 +11,7 @@ use Amdrija\RealEstate\Application\Models\User;
 use Amdrija\RealEstate\Application\RequestModels\PaginatedResponse;
 use Amdrija\RealEstate\Application\RequestModels\Pagination;
 use Amdrija\RealEstate\Application\RequestModels\User\EditUser;
+use Amdrija\RealEstate\Application\RequestModels\User\EditUserContact;
 use Amdrija\RealEstate\Application\RequestModels\User\RegisterUser;
 use DateTime;
 
@@ -118,5 +119,37 @@ class UserService
     {
         //TODO: Cacade delete user houses.
         $this->userRepository->deleteUser($user);
+    }
+
+    /**
+     * @param EditUserContact $editUser
+     * @param User $oldUser
+     * @return User
+     * @throws EmailTakenException
+     * @throws UsernameTakenException
+     */
+    public function editUserContact(EditUserContact $editUser, User $oldUser): User
+    {
+        $user = new User();
+        $user->id = $oldUser->id;
+        $user->password = $oldUser->password;
+        $user->userName = $oldUser->userName;
+        $user->birthDate = $oldUser->birthDate;
+        $user->cityId = $editUser->cityId;
+        $user->email = $editUser->email;
+        $user->firstName = $oldUser->firstName;
+        $user->isAdministrator = $oldUser->isAdministrator;
+        $user->lastName = $oldUser->lastName;
+        $user->telephone = $editUser->telephone;
+        $user->verified = $oldUser->verified;
+        if ($editUser->agencyId != "" && $oldUser->agencyId != null){
+            $user->agencyId = $editUser->agencyId;
+            $user->licenceNumber = $oldUser->licenceNumber;
+        } else {
+            $user->agencyId = null;
+            $user->licenceNumber = null;
+        }
+
+        return $this->userRepository->editUser($user);
     }
 }

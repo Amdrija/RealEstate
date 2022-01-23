@@ -2,7 +2,7 @@
     <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar" class="uk-visible@m">
         <nav class="uk-navbar-container uk-background-primary" uk-navbar style="position: relative; z-index: 980;">
             <div class="uk-navbar-left">
-                <a class="uk-navbar-item uk-logo uk-margin-top-small" href="#"><img src="/vectors/logo.svg" uk-svg class="logo"></a>
+                <a class="uk-navbar-item uk-logo uk-margin-top-small" href="/"><img src="/vectors/logo.svg" uk-svg class="logo"></a>
                 <ul class="uk-navbar-nav">
                     <li class="uk-active"><a href="#">Active</a></li>
                     <li>
@@ -22,6 +22,7 @@
             <div class="uk-navbar-right">
                 <?php if(isset($_SESSION['userId'])):?>
                     <a href="/logout" class="uk-button uk-button-default uk-margin-right">Sign Out</a>
+                    <a href="/user/edit" class="uk-button uk-button-secondary uk-margin-right">Edit Profile</a>
                 <?php else:?>
                     <a href="/login" class="uk-button uk-button-default uk-margin-right">Sign In</a>
                     <a href="/register" class="uk-button uk-button-primary uk-margin-right">Register</a>

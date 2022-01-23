@@ -18,6 +18,7 @@ use Amdrija\RealEstate\MVC\Controllers\UserController;
 use Amdrija\RealEstate\MVC\Controllers\HomeController;
 use Amdrija\RealEstate\MVC\Controllers\LoginController;
 use Amdrija\RealEstate\MVC\Middleware\AdminMiddleware;
+use Amdrija\RealEstate\MVC\Middleware\AuthenticationMiddleware;
 use Exception;
 
 class Bootstrap
@@ -67,6 +68,7 @@ class Bootstrap
     public static function RegisterMiddleware()
     {
         DependencyInjectionContainer::registerClass(AdminMiddleware::class);
+        DependencyInjectionContainer::registerClass(AuthenticationMiddleware::class);
     }
 
     private static function initializeRoutes()
@@ -103,6 +105,17 @@ class Bootstrap
             '/',
             ['controller' => HomeController::class, 'action' => 'index', 'middleware' => []]
         );
+
+        Router::register(
+            'GET',
+            '/user/edit',
+            ['controller' => UserController::class, 'action' => 'editContactIndex', 'middleware' => [AuthenticationMiddleware::class]]
+        );
+        Router::register(
+        'POST',
+        '/user/edit',
+        ['controller' => UserController::class, 'action' => 'editContact', 'middleware' => [AuthenticationMiddleware::class]]
+    );
     }
 
     /**

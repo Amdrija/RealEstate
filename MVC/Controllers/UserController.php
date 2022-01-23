@@ -4,6 +4,7 @@ namespace Amdrija\RealEstate\MVC\Controllers;
 
 use Amdrija\RealEstate\Application\RequestModels\Pagination;
 use Amdrija\RealEstate\Application\RequestModels\User\EditUser;
+use Amdrija\RealEstate\Application\RequestModels\User\EditUserContact;
 use Amdrija\RealEstate\Application\RequestModels\User\RegisterUser;
 use Amdrija\RealEstate\Application\Services\AgencyService;
 use Amdrija\RealEstate\Application\Services\CityService;
@@ -109,5 +110,38 @@ class UserController extends FrontController
 
         $this->userService->deleteUser($user);
         return new RedirectResponse("/admin/users");
+    }
+
+    public function editContactIndex(): Response
+    {
+        return $this->buildHtmlResponse("editUserContact", ['title' => 'Edit Contact',
+            'user' => $this->userService->getUserById($_SESSION['userId']),
+            'cities' => $this->cityService->getCitiesForSelect(),
+            'agencies' => $this->agencyService->getAgenciesForSelect()]);
+    }
+
+    public function editContact(): Response
+    {
+        $oldUser = $this->userService->getUserById($_SESSION['userId']);
+        if (is_null($oldUser)) {
+            return ErrorResponseFactory::getResponse("User not found.", 404);
+        }
+        try {
+            $user = $this->userService->editUserContact($this->request->deseralizeBody(EditUserContact::class), $oldUser);
+        } catch (Exception $exception) {
+            return $this->buildHtmlResponse('editUserContact',
+                ['title' => 'User',
+                    'cities' => $this->cityService->getCitiesForSelect(),
+                    'agencies' => $this->agencyService->getAgenciesForSelect(),
+                    'error' => $exception->getMessage(),
+                    'user' => $oldUser]
+            );
+        }
+
+        return $this->buildHtmlResponse('editUserContact',
+            ['title' => 'User',
+                'user' => $user,
+                'cities' => $this->cityService->getCitiesForSelect(),
+                'agencies' => $this->agencyService->getAgenciesForSelect()]);
     }
 }
