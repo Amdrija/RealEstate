@@ -14,9 +14,10 @@ use Amdrija\RealEstate\Application\Services\LoginService;
 use Amdrija\RealEstate\Application\Services\UserService;
 use Amdrija\RealEstate\Framework\DependencyInjectionContainer;
 use Amdrija\RealEstate\Framework\Router;
-use Amdrija\RealEstate\MVC\Controllers\AdminController;
+use Amdrija\RealEstate\MVC\Controllers\UserController;
 use Amdrija\RealEstate\MVC\Controllers\HomeController;
 use Amdrija\RealEstate\MVC\Controllers\LoginController;
+use Amdrija\RealEstate\MVC\Middleware\AdminMiddleware;
 use Exception;
 
 class Bootstrap
@@ -38,13 +39,14 @@ class Bootstrap
         self::RegisterControllers();
         self::RegisterServices();
         self::RegisterRepositories();
+        self::RegisterMiddleware();
     }
 
     public static function RegisterControllers()
     {
         DependencyInjectionContainer::registerClass(LoginController::class);
         DependencyInjectionContainer::registerClass(HomeController::class);
-        DependencyInjectionContainer::registerClass(AdminController::class);
+        DependencyInjectionContainer::registerClass(UserController::class);
     }
 
     public static function RegisterServices()
@@ -62,6 +64,11 @@ class Bootstrap
         DependencyInjectionContainer::register(IAgencyRepository::class, AgencyRepository::class);
     }
 
+    public static function RegisterMiddleware()
+    {
+        DependencyInjectionContainer::registerClass(AdminMiddleware::class);
+    }
+
     private static function initializeRoutes()
     {
         /* Login routes */
@@ -69,6 +76,11 @@ class Bootstrap
             'GET',
             '/login',
             ['controller' => LoginController::class, 'action' => 'index', 'middleware' => []]
+        );
+        Router::register(
+            'GET',
+            '/logout',
+            ['controller' => LoginController::class, 'action' => 'logOut', 'middleware' => []]
         );
         Router::register(
             'POST',
@@ -102,7 +114,7 @@ class Bootstrap
         Router::register(
             'GET',
             '/admin/users',
-            ['controller' => AdminController::class, 'action' => 'userList', 'middleware' => []]
+            ['controller' => UserController::class, 'action' => 'userList', 'middleware' => [AdminMiddleware::class]]
         );
     }
 }

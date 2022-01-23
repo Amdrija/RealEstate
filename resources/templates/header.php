@@ -20,8 +20,12 @@
 
             </div>
             <div class="uk-navbar-right">
-                <a href="/login" class="uk-button uk-button-default uk-margin-right">Sign In</a>
-                <a href="/register" class="uk-button uk-button-primary uk-margin-right">Register</a>
+                <?php if(isset($_SESSION['userId'])):?>
+                    <a href="/logout" class="uk-button uk-button-default uk-margin-right">Sign Out</a>
+                <?php else:?>
+                    <a href="/login" class="uk-button uk-button-default uk-margin-right">Sign In</a>
+                    <a href="/register" class="uk-button uk-button-primary uk-margin-right">Register</a>
+                <?php endif?>
             </div>
         </nav>
     </div>

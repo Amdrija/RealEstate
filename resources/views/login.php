@@ -1,9 +1,9 @@
 <div class="uk-margin-auto login-modal uk-margin-xlarge-top">
     <h1 class="uk-text-center">Welcome</h1>
     <?php if (!empty($error)): ?>
-        <div class="alert-container">
-            <div class="alert-message"><?= $error ?></div>
-            <div class="alert-button">×</div>
+        <div uk-alert class="uk-alert-danger">
+            <a class="uk-alert-close" uk-close></a>
+            <p><?= $error ?></p>
         </div>
     <?php endif; ?>
     <div class="center-content">

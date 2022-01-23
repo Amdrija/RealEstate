@@ -31,6 +31,10 @@ class LoginService
             return false;
         }
 
+        if (!$user->verified) {
+            return false;
+        }
+
         if ($keepMeLoggedIn) {
             $this->initializeUserToken($user);
         }
@@ -38,6 +42,14 @@ class LoginService
         $this->initializeSession($user->id);
 
         return true;
+    }
+
+    public function logOut()
+    {
+        if ($this->isSessionActive()) {
+            $this->userRepository->deleteUserToken($_SESSION['userId']);
+            unset($_SESSION['userId']);
+        }
     }
 
     /**
@@ -56,6 +68,12 @@ class LoginService
         $this->initializeSession($user->id);
 
         return true;
+    }
+
+    public function isAdminLoggedIn(): bool
+    {
+        $user = $this->isSessionActive() ? $this->userRepository->getUserById($_SESSION['userId']): $this->isLoginRemembered();
+        return !is_null($user) && $user->isAdministrator;
     }
 
     /**
@@ -96,9 +114,9 @@ class LoginService
 
     /**
      * Initializes the $_SESSION['userId'] to be the specified userId
-     * @param int $userId
+     * @param string $userId
      */
-    private function initializeSession(int $userId)
+    private function initializeSession(string $userId)
     {
         $_SESSION['userId'] = $userId;
     }

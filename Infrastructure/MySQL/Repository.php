@@ -5,6 +5,7 @@ namespace Amdrija\RealEstate\Application\Infrastructure\MySQL;
 use Amdrija\RealEstate\Application\Models\Entity;
 use Amdrija\RealEstate\Framework\ArraySerializer;
 use Carbon\Traits\Date;
+use Illuminate\Support\Arr;
 use PDO;
 use ReflectionClass;
 
@@ -18,6 +19,15 @@ class Repository
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
+    }
+
+    public function getById(string $className, string $id): object
+    {
+        $class = new ReflectionClass($className);
+        $statement = $this->pdo->prepare("SELECT * FROM {$class->getShortName()} WHERE id = :id");
+
+        $statement->execute(['id' => $id]);
+        return ArraySerializer::deserialize($className, $statement->fetch());
     }
 
     public function getCount(string $className)

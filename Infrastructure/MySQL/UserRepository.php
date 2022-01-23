@@ -88,4 +88,18 @@ class UserRepository extends Repository implements IUserRepository
     {
         return $this->getCount(User::class);
     }
+
+    public function getUserById(string $id): ?User
+    {
+        /* @var $user User*/
+        $user =  $this->getById(User::class, $id);
+
+        return $user;
+    }
+
+    public function deleteUserToken(string $id)
+    {
+        $statement = $this->pdo->prepare("UPDATE realEstate.User SET token = :token WHERE id = :id;");
+        $statement->execute(['id' => $id, 'token' => null]);
+    }
 }

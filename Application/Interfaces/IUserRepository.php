@@ -8,6 +8,10 @@ use Amdrija\RealEstate\Application\Models\User;
 
 interface IUserRepository
 {
+    public function deleteUserToken(string $id);
+
+    public function getUserById(string $id): ?User;
+
     public function getUserCount(): int;
 
     public function getUsers(int $count = -1, int $offset = 0): array;

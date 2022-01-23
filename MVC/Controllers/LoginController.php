@@ -87,7 +87,14 @@ class LoginController extends FrontController
             return $this->buildHtmlResponse('login', ['title' => 'Log In', 'error' => 'Login unsuccessful']);
         }
 
-        return new RedirectResponse('/admin');
+        return new RedirectResponse('/');
+    }
+
+    public function logOut(): Response
+    {
+        $this->loginService->logOut();
+
+        return new RedirectResponse('/');
     }
 
     public function register(): Response
