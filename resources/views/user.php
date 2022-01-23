@@ -13,7 +13,7 @@
     if (!empty($error)): ?>
         <div uk-alert class="uk-alert-danger">
             <a class="uk-alert-close" uk-close></a>
-            <p><?= $error ?></p>
+            <p id="error"><?= $error ?></p>
         </div>
     <?php endif; ?>
     <div class="center-content uk-margin-large-bottom">
@@ -83,9 +83,39 @@
                 <label><input class="uk-checkbox" type="checkbox" name="isAdministrator" <?= $user->isAdministrator ? "checked" : ""?>> Administrator</label>
             </div>
             <div class="uk-flex uk-flex-between uk-margin-large-top">
-                <button class="uk-button uk-button-danger">Delete</button>
+                <button class="uk-button uk-button-danger" id="delete-button">Delete</button>
                 <input type="submit" class="uk-button uk-button-primary" value="Edit">
             </div>
         </form>
     </div>
 </div>
+<script>
+    window.addEventListener('DOMContentLoaded', function (){
+        document.getElementById('delete-button').addEventListener('click', DeleteUser);
+    });
+
+    function DeleteUser(event) {
+        event.preventDefault();
+        let splittedUri = window.location.href.split("/");
+        let userId = splittedUri[splittedUri.length - 1];
+
+        try {
+            fetch(window.location.href + '/delete', {
+                method: 'POST',
+                mode: 'no-cors',
+                credentials: 'same-origin',
+                body: new FormData(),
+                redirect: "follow"
+            }).then(response => {
+                if (!response.ok) {
+                    let errorDiv = document.getElementById("error");
+                    errorDiv.innerText = "Error occured.";
+                }
+                let splittedUrl = window.location.href.split("/");
+                window.location.href = splittedUrl.slice(0, splittedUrl.length - 1).join("/");
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+</script>

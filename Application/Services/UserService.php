@@ -113,4 +113,10 @@ class UserService
 
         return $this->userRepository->editUser($user);
     }
+
+    public function deleteUser(User $user)
+    {
+        //TODO: Cacade delete user houses.
+        $this->userRepository->deleteUser($user);
+    }
 }

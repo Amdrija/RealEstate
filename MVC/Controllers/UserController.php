@@ -8,6 +8,7 @@ use Amdrija\RealEstate\Application\Services\AgencyService;
 use Amdrija\RealEstate\Application\Services\CityService;
 use Amdrija\RealEstate\Application\Services\UserService;
 use Amdrija\RealEstate\Framework\ArraySerializer;
+use Amdrija\RealEstate\Framework\Responses\ErrorResponseFactory;
 use Amdrija\RealEstate\Framework\Responses\RedirectResponse;
 use Amdrija\RealEstate\Framework\Responses\Response;
 use Exception;
@@ -36,10 +37,14 @@ class UserController extends FrontController
 
     public function getUserById(array $parameters): Response
     {
-        $id = $parameters['id'];
+        $user = $this->userService->getUserById($parameters['id']);
+        if (is_null($user)) {
+            return ErrorResponseFactory::getResponse("User not found.", 404);
+        }
+
         return $this->buildHtmlResponse('user',
             ['title' => 'User',
-                'user' => $this->userService->getUserById($id),
+                'user' => $user,
                 'cities' => $this->cityService->getCitiesForSelect(),
                 'agencies' => $this->agencyService->getAgenciesForSelect()]);
     }
@@ -47,6 +52,9 @@ class UserController extends FrontController
     public function editUser(array $parameters): Response
     {
         $oldUser = $this->userService->getUserById($parameters['id']);
+        if (is_null($oldUser)) {
+            return ErrorResponseFactory::getResponse("User not found.", 404);
+        }
         try {
             $user = $this->userService->editUser($this->request->deseralizeBody(EditUser::class), $oldUser);
         } catch (Exception $exception) {
@@ -64,5 +72,16 @@ class UserController extends FrontController
                 'user' => $user,
                 'cities' => $this->cityService->getCitiesForSelect(),
                 'agencies' => $this->agencyService->getAgenciesForSelect()]);
+    }
+
+    public function deleteUser(array $parameters): Response
+    {
+        $user = $this->userService->getUserById($parameters['id']);
+        if (is_null($user)) {
+            return ErrorResponseFactory::getResponse("User not found.", 404);
+        }
+
+        $this->userService->deleteUser($user);
+        return new RedirectResponse("/admin/users");
     }
 }

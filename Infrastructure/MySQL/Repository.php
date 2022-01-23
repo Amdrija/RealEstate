@@ -21,13 +21,17 @@ class Repository
         $this->pdo = $pdo;
     }
 
-    public function getById(string $className, string $id): object
+    public function getById(string $className, string $id): ?object
     {
         $class = new ReflectionClass($className);
         $statement = $this->pdo->prepare("SELECT * FROM {$class->getShortName()} WHERE id = :id");
 
         $statement->execute(['id' => $id]);
-        return ArraySerializer::deserialize($className, $statement->fetch());
+        $row = $statement->fetch();
+        if (!$row) {
+            return null;
+        }
+        return ArraySerializer::deserialize($className, $row);
     }
 
     public function getCount(string $className)
@@ -55,6 +59,13 @@ class Repository
             $entities[] = ArraySerializer::deserialize($className, $row);
         }
         return $entities;
+    }
+
+    public function delete(Entity $entity)
+    {
+        $class = new ReflectionClass($entity);
+        $statement = $this->pdo->prepare("DELETE FROM {$class->getShortName()} WHERE id = :id");
+        $statement->execute(['id' => $entity->id]);
     }
 
     public function insert(Entity $entity): Entity

@@ -8,6 +8,8 @@ use Amdrija\RealEstate\Application\Models\User;
 
 interface IUserRepository
 {
+    public function deleteUser(User $user);
+
     public function deleteUserToken(string $id);
 
     public function getUserById(string $id): ?User;

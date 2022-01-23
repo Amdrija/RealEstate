@@ -13,5 +13,7 @@ try {
     $response = ErrorResponseFactory::getResponse($e->getMessage(), 500);
 }
 http_response_code($response->getStatus());
+$response->setHeader("Access-Control-Allow-Headers", "*");
+$response->setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, DELETE");
 $response->constructHeader();
 echo $response->getContent();

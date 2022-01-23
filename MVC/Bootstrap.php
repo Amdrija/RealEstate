@@ -128,5 +128,10 @@ class Bootstrap
             '/admin/users/{:id}',
             ['controller' => UserController::class, 'action' => 'editUser', 'middleware' => [AdminMiddleware::class]]
         );
+        Router::register(
+            'POST',
+            '/admin/users/{:id}/delete',
+            ['controller' => UserController::class, 'action' => 'deleteUser', 'middleware' => [AdminMiddleware::class]]
+        );
     }
 }

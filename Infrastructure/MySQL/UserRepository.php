@@ -122,4 +122,9 @@ class UserRepository extends Repository implements IUserRepository
 
         return $user;
     }
+
+    public function deleteUser(User $user)
+    {
+        parent::delete($user);
+    }
 }
