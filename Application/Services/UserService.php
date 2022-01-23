@@ -10,6 +10,7 @@ use Amdrija\RealEstate\Application\Interfaces\IUserRepository;
 use Amdrija\RealEstate\Application\Models\User;
 use Amdrija\RealEstate\Application\RequestModels\PaginatedResponse;
 use Amdrija\RealEstate\Application\RequestModels\Pagination;
+use Amdrija\RealEstate\Application\RequestModels\User\EditUser;
 use Amdrija\RealEstate\Application\RequestModels\User\RegisterUser;
 use DateTime;
 
@@ -61,7 +62,7 @@ class UserService
         $user->isAdministrator = false;
         $user->lastName = $registerUser->lastName;
         $user->password = password_hash($registerUser->password, PASSWORD_DEFAULT);
-        $user->telephone = $registerUser->password;
+        $user->telephone = $registerUser->telephone;
         $user->verified = false;
         if ($registerUser->agencyId != ""){
             $user->agencyId = $registerUser->agencyId;
@@ -75,5 +76,41 @@ class UserService
         }
 
         return $this->userRepository->saveUser($user);
+    }
+
+    /**
+     * @param EditUser $editUser
+     * @param User $user
+     * @return User
+     * @throws EmailTakenException
+     * @throws LicenceNumberRequiredForAgentException
+     * @throws UsernameTakenException
+     */
+    public function editUser(EditUser $editUser, User $oldUser): User
+    {
+        $user = new User();
+        $user->id = $oldUser->id;
+        $user->password = $oldUser->password;
+        $user->userName = $editUser->userName;
+        $user->birthDate = $editUser->birthDate;
+        $user->cityId = $editUser->cityId;
+        $user->email = $editUser->email;
+        $user->firstName = $editUser->firstName;
+        $user->isAdministrator = $editUser->isAdministrator;
+        $user->lastName = $editUser->lastName;
+        $user->telephone = $editUser->telephone;
+        $user->verified = $editUser->verified;
+        if ($editUser->agencyId != ""){
+            $user->agencyId = $editUser->agencyId;
+            if ($editUser->licenceNumber == 0) {
+                throw new LicenceNumberRequiredForAgentException();
+            }
+            $user->licenceNumber = $editUser->licenceNumber;
+        } else {
+            $user->agencyId = null;
+            $user->licenceNumber = null;
+        }
+
+        return $this->userRepository->editUser($user);
     }
 }

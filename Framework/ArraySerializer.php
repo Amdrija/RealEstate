@@ -28,6 +28,8 @@ class ArraySerializer
                 $array[$property->name] = (int)$array[$property->name];
             } elseif ($property->getType()->getName() == "float") {
                 $array[$property->name] = (float)$array[$property->name];
+            } elseif ($property->getType()->getName() == "bool") {
+                $array[$property->name] = isset($array[$property->name]);
             }
             $property->setValue($object, $array[$property->name]);
         }

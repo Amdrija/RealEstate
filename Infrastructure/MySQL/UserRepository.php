@@ -102,4 +102,24 @@ class UserRepository extends Repository implements IUserRepository
         $statement = $this->pdo->prepare("UPDATE realEstate.User SET token = :token WHERE id = :id;");
         $statement->execute(['id' => $id, 'token' => null]);
     }
+
+    public function editUser(User $user): User
+    {
+        /* @var $user User */
+        try {
+            $user = parent::edit($user);
+        } catch (\PDOException $e) {
+            if (str_contains($e->getMessage(), "userName")) {
+                throw new UsernameTakenException();
+            }
+
+            if (str_contains($e->getMessage(), "email")) {
+                throw new EmailTakenException($user->email);
+            }
+
+            throw $e;
+        }
+
+        return $user;
+    }
 }

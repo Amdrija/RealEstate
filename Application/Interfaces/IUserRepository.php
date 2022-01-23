@@ -27,4 +27,9 @@ interface IUserRepository
      * @throws EmailTakenException
      */
     public function saveUser(User $user): User;
+    /**
+     * @throws UsernameTakenException
+     * @throws EmailTakenException
+     */
+    public function editUser(User $user): User;
 }

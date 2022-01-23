@@ -65,6 +65,25 @@ class Repository
         return $entity;
     }
 
+    public function edit(Entity $entity): Entity
+    {
+        $statement = $this->pdo->prepare(self::getUpdateQuery($entity));
+        $statement->execute(self::convertObjectToArrayForQuery($entity));
+
+        return $entity;
+    }
+
+    private static function getUpdateQuery(Entity $object): string
+    {
+        $class = new ReflectionClass($object);
+
+        $propertiesForUpdate = array_filter($class->getProperties(), fn($x) => $x->name != "id");
+        $setProperties = join(",", array_map(fn($x) => "$x->name = :$x->name", $propertiesForUpdate));
+
+        $tableName = $class->getShortName();
+        return "UPDATE $tableName SET $setProperties WHERE id = :id;";
+    }
+
     private static function getInsertQuery(object $object): string
     {
         $class = new ReflectionClass($object);
