@@ -65,6 +65,7 @@ CREATE TABLE realEstate.BusLine(
 );
 CREATE TABLE realEstate.Estate(
                                   id char(36) primary key,
+                                  name varchar(64) not null,
                                   price int unsigned not null,
                                   surface double not null,
                                   numberOfRooms int unsigned not null,

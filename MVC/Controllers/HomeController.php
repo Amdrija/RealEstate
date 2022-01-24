@@ -8,6 +8,6 @@ class HomeController extends FrontController
 {
     public function index(): Response
     {
-        return $this->buildHtmlResponse('landingPage', ['title' => 'RealEstate']);
+        return $this->buildHtmlResponse('landingPage', ['title' => 'Estate']);
     }
 }

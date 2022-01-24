@@ -134,4 +134,13 @@ class LoginService
 
         return $this->userRepository->getUserByToken($_COOKIE['userToken']);
     }
+
+    public function getCurrentUser(): ?User
+    {
+        if($this->isSessionActive()) {
+            return $this->userRepository->getUserById($_SESSION['userId']);
+        }
+
+        return $this->isLoginRemembered();
+    }
 }

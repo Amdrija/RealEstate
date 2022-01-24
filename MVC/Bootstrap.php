@@ -3,17 +3,34 @@
 namespace Amdrija\RealEstate\MVC;
 
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\AgencyRepository;
+use Amdrija\RealEstate\Application\Infrastructure\MySQL\BusLineRepository;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\CityRepository;
+use Amdrija\RealEstate\Application\Infrastructure\MySQL\ConditionTypeRepository;
+use Amdrija\RealEstate\Application\Infrastructure\MySQL\EstateRepository;
+use Amdrija\RealEstate\Application\Infrastructure\MySQL\EstateTypeRepository;
+use Amdrija\RealEstate\Application\Infrastructure\MySQL\HeatingTypeRepository;
+use Amdrija\RealEstate\Application\Infrastructure\MySQL\PerkRepository;
+use Amdrija\RealEstate\Application\Infrastructure\MySQL\StreetRepository;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\UserRepository;
 use Amdrija\RealEstate\Application\Interfaces\IAgencyRepository;
+use Amdrija\RealEstate\Application\Interfaces\IBusLineRepository;
 use Amdrija\RealEstate\Application\Interfaces\ICityRepository;
+use Amdrija\RealEstate\Application\Interfaces\IConditionTypeRepository;
+use Amdrija\RealEstate\Application\Interfaces\IEstateRepository;
+use Amdrija\RealEstate\Application\Interfaces\IEstateTypeRepository;
+use Amdrija\RealEstate\Application\Interfaces\IHeatingTypeRepository;
+use Amdrija\RealEstate\Application\Interfaces\IPerkRepository;
+use Amdrija\RealEstate\Application\Interfaces\IStreetRepository;
 use Amdrija\RealEstate\Application\Interfaces\IUserRepository;
 use Amdrija\RealEstate\Application\Services\AgencyService;
 use Amdrija\RealEstate\Application\Services\CityService;
+use Amdrija\RealEstate\Application\Services\EstateService;
 use Amdrija\RealEstate\Application\Services\LoginService;
 use Amdrija\RealEstate\Application\Services\UserService;
 use Amdrija\RealEstate\Framework\DependencyInjectionContainer;
+use Amdrija\RealEstate\Framework\ImageService;
 use Amdrija\RealEstate\Framework\Router;
+use Amdrija\RealEstate\MVC\Controllers\EstateController;
 use Amdrija\RealEstate\MVC\Controllers\UserController;
 use Amdrija\RealEstate\MVC\Controllers\HomeController;
 use Amdrija\RealEstate\MVC\Controllers\LoginController;
@@ -48,6 +65,7 @@ class Bootstrap
         DependencyInjectionContainer::registerClass(LoginController::class);
         DependencyInjectionContainer::registerClass(HomeController::class);
         DependencyInjectionContainer::registerClass(UserController::class);
+        DependencyInjectionContainer::registerClass(EstateController::class);
     }
 
     public static function RegisterServices()
@@ -56,6 +74,8 @@ class Bootstrap
         DependencyInjectionContainer::registerClass(UserService::class);
         DependencyInjectionContainer::registerClass(CityService::class);
         DependencyInjectionContainer::registerClass(AgencyService::class);
+        DependencyInjectionContainer::registerClass(EstateService::class);
+        DependencyInjectionContainer::registerClass(ImageService::class);
     }
 
     public static function RegisterRepositories()
@@ -63,6 +83,13 @@ class Bootstrap
         DependencyInjectionContainer::register(IUserRepository::class, UserRepository::class);
         DependencyInjectionContainer::register(ICityRepository::class, CityRepository::class);
         DependencyInjectionContainer::register(IAgencyRepository::class, AgencyRepository::class);
+        DependencyInjectionContainer::register(IEstateRepository::class, EstateRepository::class);
+        DependencyInjectionContainer::register(IEstateTypeRepository::class, EstateTypeRepository::class);
+        DependencyInjectionContainer::register(IConditionTypeRepository::class, ConditionTypeRepository::class);
+        DependencyInjectionContainer::register(IHeatingTypeRepository::class, HeatingTypeRepository::class);
+        DependencyInjectionContainer::register(IStreetRepository::class, StreetRepository::class);
+        DependencyInjectionContainer::register(IBusLineRepository::class, BusLineRepository::class);
+        DependencyInjectionContainer::register(IPerkRepository::class, PerkRepository::class);
     }
 
     public static function RegisterMiddleware()
@@ -125,8 +152,20 @@ class Bootstrap
         Router::register(
         'POST',
         '/user/edit/password',
-        ['controller' => UserController::class, 'action' => 'editPassword', 'middleware' => [AuthenticationMiddleware::class]]
-    );
+            ['controller' => UserController::class, 'action' => 'editPassword', 'middleware' => [AuthenticationMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/estates/add',
+            ['controller' => EstateController::class, 'action' => 'addEstateIndex', 'middleware' => [AuthenticationMiddleware::class]]
+        );
+
+        Router::register(
+            'POST',
+            '/estates/add',
+            ['controller' => EstateController::class, 'action' => 'addEstate', 'middleware' => [AuthenticationMiddleware::class]]
+        );
     }
 
     /**
