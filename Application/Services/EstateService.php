@@ -13,6 +13,7 @@ class EstateService
 {
     private readonly IEstateRepository $estateRepository;
     private readonly ImageService $imageService;
+    private const LATEST_ESTATE_COUNT = 6;
 
     public function __construct(IEstateRepository $estateRepository, ImageService $imageService)
     {
@@ -27,5 +28,10 @@ class EstateService
         $newImagesURI = array_map(fn($i) => $this->imageService->imageRelativePath($i), $newImagesNames);
         $newEstate = $this->estateRepository->createEstate($estate, $newImagesURI, $uuid, $user->id);
         $this->imageService->moveTemporaryFiles($images, $this->imageService->imageSaveDirectory(), $newImagesNames);
+    }
+
+    public function getLatest(): array
+    {
+        return $this->estateRepository->getLatest(self::LATEST_ESTATE_COUNT);
     }
 }

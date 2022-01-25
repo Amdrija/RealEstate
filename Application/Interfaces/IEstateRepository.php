@@ -7,5 +7,7 @@ use Amdrija\RealEstate\Application\RequestModels\Estate\AddEstate;
 
 interface IEstateRepository
 {
+    public function getLatest(int $count): array;
+
     public function createEstate(AddEstate $estate, array $images, string $id, string $advertiserId): Estate;
 }

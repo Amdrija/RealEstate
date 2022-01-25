@@ -22,7 +22,7 @@
 </head>
 <body>
 <?php include __DIR__ . '/../templates/header.php' ?>
-<div class="uk-container-large uk-margin-auto">
+<div class="uk-container-large uk-margin-auto uk-padding uk-padding-remove-vertical">
     <?php include $view . '.php' ?>
 </div>
 

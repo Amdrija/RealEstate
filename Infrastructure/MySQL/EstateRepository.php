@@ -6,6 +6,7 @@ use Amdrija\RealEstate\Application\Interfaces\IEstateRepository;
 use Amdrija\RealEstate\Application\Models\Estate;
 use Amdrija\RealEstate\Application\Models\Perk;
 use Amdrija\RealEstate\Application\RequestModels\Estate\AddEstate;
+use Amdrija\RealEstate\Application\RequestModels\Estate\EstateSummary;
 use Exception;
 
 class EstateRepository extends Repository implements IEstateRepository
@@ -86,5 +87,19 @@ class EstateRepository extends Repository implements IEstateRepository
 
         /* TODO: Change return*/
         return new Estate();
+    }
+
+    public function getLatest(int $count): array
+    {
+        $estates = [];
+        foreach($this->pdo->query("SELECT id, name, price, surface, busLines, images, numberOfRooms 
+            FROM realEstate.Estate 
+            ORDER BY dateAdded DESC 
+            LIMIT $count")->fetchAll() as $row)
+        {
+            $estates []= new EstateSummary($row['id'], $row['name'], $row['price'], $row['surface'], $row['busLines'], $row['images'], $row['numberOfRooms']);
+        }
+
+        return $estates;
     }
 }

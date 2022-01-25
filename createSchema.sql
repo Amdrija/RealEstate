@@ -85,7 +85,8 @@ CREATE TABLE realEstate.Estate(
                                   foreign key (streetId) references realEstate.Street(id),
                                   streetNumber int unsigned not null,
                                   busLines varchar(40),
-                                  images varchar(500) not null
+                                  images varchar(500) not null,
+                                  dateAdded datetime default current_timestamp not null
 );
 CREATE TABLE realEstate.FavouriteUserEstate(
                                                id int unsigned auto_increment primary key not null,
@@ -99,5 +100,5 @@ CREATE TABLE realEstate.EstatePerk(
                                       perkId int unsigned not null,
                                       foreign key (perkId) references realEstate.Perk(id),
                                       estateId char(36) not null,
-                                      foreign key (estateId) references realEstate.Estate(id)
+                                      foreign key (estateId) references realEstate.Estate(id) on DELETE cascade
 );
