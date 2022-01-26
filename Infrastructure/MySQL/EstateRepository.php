@@ -7,8 +7,11 @@ use Amdrija\RealEstate\Application\Models\Estate;
 use Amdrija\RealEstate\Application\Models\Perk;
 use Amdrija\RealEstate\Application\RequestModels\Estate\AddEstate;
 use Amdrija\RealEstate\Application\RequestModels\Estate\EstateForSearchResult;
+use Amdrija\RealEstate\Application\RequestModels\Estate\EstateSingle;
 use Amdrija\RealEstate\Application\RequestModels\Estate\EstateSummary;
 use Amdrija\RealEstate\Application\RequestModels\Estate\SearchEstate;
+use Amdrija\RealEstate\Application\RequestModels\User\UserForEstate;
+use Amdrija\RealEstate\Framework\ArraySerializer;
 use Exception;
 
 class EstateRepository extends Repository implements IEstateRepository
@@ -197,5 +200,68 @@ class EstateRepository extends Repository implements IEstateRepository
         }
 
         return $query;
+    }
+
+    public function getSingleEstateById(string $id): ?EstateSingle
+    {
+        $statementEstate = $this->pdo->prepare("SELECT E.*, CT.name as 'condition', ET.name as 'type', 
+               HT.name as 'heating', S.name as street, ML.name as microLocation,
+               M.name  as 'municipality', C.name as 'city', ML.id as microLocationId
+            FROM realEstate.Estate E
+            JOIN realEstate.ConditionType CT on E.conditionId = CT.id
+            JOIN realEstate.EstateType ET on ET.id = E.typeId
+            JOIN realEstate.HeatingType HT on E.heatingId = HT.id
+            JOIN realEstate.Street S on E.streetId = S.id
+            JOIN realEstate.MicroLocation ML on S.microLocationId = ML.id
+            JOIN realEstate.Municipality M on ML.municipalityId = M.id
+            JOIN realEstate.City C on M.cityId = C.id
+            WHERE E.id = :id");
+        $statementEstate->execute(['id' => $id]);
+        $rowEstate = $statementEstate->fetch();
+
+        if (is_null($rowEstate)) {
+            return null;
+        }
+
+        $statementPerks = $this->pdo->prepare("SELECT P.id FROM realEstate.Perk P
+            JOIN realEstate.EstatePerk EP on P.id = EP.perkId
+            where EP.estateId = :id;");
+        $statementPerks->execute(['id' => $id]);
+        $rowPerks = $statementPerks->fetchAll();
+
+        $statementAverage = $this->pdo->prepare("SELECT AVG(E.price / E.surface) FROM realEstate.Estate E
+            JOIN realEstate.Street S on S.id = E.streetId
+            JOIN realEstate.MicroLocation ML on ML.id = S.microLocationId
+            WHERE ML.id = :microLocationId
+            GROUP BY ML.id;");
+        $statementAverage->execute(['microLocationId' => $rowEstate['microLocationId']]);
+        $averagePrice = $statementAverage->fetchColumn();
+
+        $advertiserStatement = $this->pdo->prepare("
+            SELECT U.firstName, U.lastName, U.telephone, U.agencyId, U.licenceNumber
+            FROM realEstate.User U
+            WHERE U.id = :id;");
+        $advertiserStatement->execute(['id' => $rowEstate['advertiserId']]);
+        $advertiser = $advertiserStatement->fetch();
+
+        $agency = null;
+        if (!is_null($advertiser['agencyId'])) {
+            $agencyStatement = $this->pdo->prepare("
+                SELECT A.name as agencyName, A.pib , S.name as street, A.number, C.name as city
+                FROM realEstate.Agency A
+                JOIN realEstate.Street S on S.id = A.streetId
+                JOIN realEstate.MicroLocation ML on ML.id = S.microLocationId
+                JOIN realEstate.Municipality M on M.id = ML.municipalityId
+                JOIN realEstate.City C on C.id = M.cityId
+                WHERE A.id = :id;");
+            $agencyStatement->execute(['id' => $advertiser['agencyId']]);
+            $agency = $agencyStatement->fetch();
+        }
+
+
+        return new EstateSingle($rowEstate,
+            new UserForEstate($advertiser, $agency),
+            $averagePrice,
+            array_map(fn($x) => $x['id'], $rowPerks));
     }
 }

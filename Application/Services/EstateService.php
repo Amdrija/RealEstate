@@ -6,6 +6,7 @@ use Amdrija\RealEstate\Application\Interfaces\IEstateRepository;
 use Amdrija\RealEstate\Application\Models\Estate;
 use Amdrija\RealEstate\Application\Models\User;
 use Amdrija\RealEstate\Application\RequestModels\Estate\AddEstate;
+use Amdrija\RealEstate\Application\RequestModels\Estate\EstateSingle;
 use Amdrija\RealEstate\Application\RequestModels\Estate\SearchEstate;
 use Amdrija\RealEstate\Application\RequestModels\PaginatedResponse;
 use Amdrija\RealEstate\Application\RequestModels\Pagination;
@@ -43,5 +44,10 @@ class EstateService
     public function getLatest(): array
     {
         return $this->estateRepository->getLatest(self::LATEST_ESTATE_COUNT);
+    }
+
+    public function getEstateSingle(string $id): ?EstateSingle
+    {
+        return $this->estateRepository->getSingleEstateById($id);
     }
 }

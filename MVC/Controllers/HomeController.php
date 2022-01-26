@@ -5,9 +5,11 @@ namespace Amdrija\RealEstate\MVC\Controllers;
 use Amdrija\RealEstate\Application\Interfaces\ICityRepository;
 use Amdrija\RealEstate\Application\Interfaces\IConditionTypeRepository;
 use Amdrija\RealEstate\Application\Interfaces\IEstateTypeRepository;
+use Amdrija\RealEstate\Application\Interfaces\IPerkRepository;
 use Amdrija\RealEstate\Application\RequestModels\Estate\SearchEstate;
 use Amdrija\RealEstate\Application\Services\EstateService;
 use Amdrija\RealEstate\Framework\ArraySerializer;
+use Amdrija\RealEstate\Framework\Responses\ErrorResponseFactory;
 use Amdrija\RealEstate\Framework\Responses\Response;
 
 class HomeController extends FrontController
@@ -16,14 +18,16 @@ class HomeController extends FrontController
     private readonly IEstateTypeRepository $estateTypeRepository;
     private readonly ICityRepository $cityRepository;
     private readonly IConditionTypeRepository $conditionTypeRepository;
+    private readonly IPerkRepository $perkRepository;
 
-    public function __construct(EstateService $estateService, IEstateTypeRepository $estateTypeRepository, ICityRepository $cityRepository, \Amdrija\RealEstate\Application\Interfaces\IConditionTypeRepository $conditionTypeRepository)
+    public function __construct(EstateService $estateService, IEstateTypeRepository $estateTypeRepository, ICityRepository $cityRepository, \Amdrija\RealEstate\Application\Interfaces\IConditionTypeRepository $conditionTypeRepository, \Amdrija\RealEstate\Application\Interfaces\IPerkRepository $perkRepository)
     {
         parent::__construct();
         $this->estateService = $estateService;
         $this->estateTypeRepository = $estateTypeRepository;
         $this->cityRepository = $cityRepository;
         $this->conditionTypeRepository = $conditionTypeRepository;
+        $this->perkRepository = $perkRepository;
     }
 
     public function index(): Response
@@ -44,5 +48,22 @@ class HomeController extends FrontController
             'conditionTypes' => $this->conditionTypeRepository->getConditionTypes(),
             'paginatedResponse' => $this->estateService->searchEstates($searchEstate, $this->request->getQueryParameters()),
             'searchEstate' => $searchEstate]);
+    }
+
+    public function getEstateById(array $parameters): Response
+    {
+        if(!isset($parameters['id'])) {
+            return ErrorResponseFactory::getResponse('Id not set.', 400);
+        }
+
+        $estate = $this->estateService->getEstateSingle($parameters['id']);
+        if(is_null($estate)) {
+            return ErrorResponseFactory::getResponse('Estate not found', 404);
+        }
+
+        return $this->buildHtmlResponse('estate', [
+            'title' => 'Estate',
+            'estate' => $estate,
+            'perks' => $this->perkRepository->getPerks()]);
     }
 }

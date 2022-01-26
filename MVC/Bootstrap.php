@@ -180,6 +180,12 @@ class Bootstrap
 
         Router::register(
             'GET',
+            '/estates/search/{:id}',
+            ['controller' => HomeController::class, 'action' => 'getEstateById', 'middleware' => []]
+        );
+
+        Router::register(
+            'GET',
             '/microLocations',
             ['controller' => MicroLocationController::class, 'action' => 'getList', 'middleware' => []]
         );
