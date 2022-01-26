@@ -6,6 +6,9 @@ use Amdrija\RealEstate\Application\Interfaces\IEstateRepository;
 use Amdrija\RealEstate\Application\Models\Estate;
 use Amdrija\RealEstate\Application\Models\User;
 use Amdrija\RealEstate\Application\RequestModels\Estate\AddEstate;
+use Amdrija\RealEstate\Application\RequestModels\Estate\SearchEstate;
+use Amdrija\RealEstate\Application\RequestModels\PaginatedResponse;
+use Amdrija\RealEstate\Application\RequestModels\Pagination;
 use Amdrija\RealEstate\Application\Uuid;
 use Amdrija\RealEstate\Framework\ImageService;
 
@@ -28,6 +31,13 @@ class EstateService
         $newImagesURI = array_map(fn($i) => $this->imageService->imageRelativePath($i), $newImagesNames);
         $newEstate = $this->estateRepository->createEstate($estate, $newImagesURI, $uuid, $user->id);
         $this->imageService->moveTemporaryFiles($images, $this->imageService->imageSaveDirectory(), $newImagesNames);
+    }
+
+    public function searchEstates(SearchEstate $estate, array $queryParameters): PaginatedResponse
+    {
+        $userCount = $this->estateRepository->countEstates($estate);
+        $pagination = Pagination::create($queryParameters, $userCount);
+        return  new PaginatedResponse($pagination,$this->estateRepository->searchEstates($estate, $pagination->pageSize, $pagination->getOffset()));
     }
 
     public function getLatest(): array

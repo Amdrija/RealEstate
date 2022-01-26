@@ -23,7 +23,7 @@ use Amdrija\RealEstate\Application\Models\EstateType;
                 <div>
                     <label class="" for="type-input">Type</label>
                     <div class="uk-inline uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
-                        <select class="uk-select" required name="typeId" id="type-input">
+                        <select class="uk-select" name="typeId" id="type-input">
                             <option value="">Choose type...</option>
                             <?php /*  @var $estateType EstateType */?>
                             <?php foreach ($estateTypes as $estateType): ?>
@@ -35,7 +35,7 @@ use Amdrija\RealEstate\Application\Models\EstateType;
                 <div>
                     <label class="" for="location-input">Location</label>
                     <div class="uk-inline uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
-                        <select class="uk-select" required name="streetId" id="location-input">
+                        <select class="uk-select" name="cityId" id="location-input">
                             <option value="">Choose city...</option>
                             <?php /* @var $city City */?>
                             <?php foreach ($cities as $city): ?>
@@ -47,13 +47,13 @@ use Amdrija\RealEstate\Application\Models\EstateType;
                 <div>
                     <label class="" for="price-input">Price up to</label>
                     <div class="uk-inline uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
-                        <input class="uk-input uk-width-1-1" type="number" step="1" id="price-input" name="price" required>
+                        <input class="uk-input uk-width-1-1" type="number" step="1" id="price-input" name="priceUpTo">
                     </div>
                 </div>
                 <div>
                     <label class="" for="surface-input">Surface from</label>
                     <div class="uk-inline uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
-                        <input class="uk-input uk-width-1-1" type="number" id="surface-input" name="surface" required>
+                        <input class="uk-input uk-width-1-1" type="number" id="surface-input" name="surfaceFrom">
                     </div>
                 </div>
                 <div></div>

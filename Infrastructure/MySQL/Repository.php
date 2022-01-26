@@ -106,7 +106,7 @@ class Repository
         return "INSERT INTO $tableName ($insertPropertyNames) VALUES ($valueParameters);";
     }
 
-    private static function convertObjectToArrayForQuery(object $object): array
+    protected static function convertObjectToArrayForQuery(object $object): array
     {
         $array = [];
         $class = new ReflectionClass($object);
