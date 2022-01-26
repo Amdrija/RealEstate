@@ -1,4 +1,5 @@
 <header>
+    <!-- TODO: Make navbar sticky-->
     <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar" class="uk-visible@m">
         <nav class="uk-navbar-container uk-background-primary" uk-navbar style="position: relative; z-index: 980;">
             <div class="uk-navbar-left">
