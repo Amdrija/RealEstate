@@ -15,13 +15,13 @@ use Amdrija\RealEstate\Application\RequestModels\Estate\EstateForSearchResult; ?
             </div>
             <div>
                 <div class="uk-card-body">
-                    <div class="uk-flex uk-flex-between">
+                    <div class="uk-flex uk-flex-between uk-flex-top">
                         <p class="uk-card-title uk-margin-remove"><?= $estate->name?></p>
-                        <div class="uk-label uk-text-large"><?= $estate->price?>€</div>
+                        <span class="uk-label uk-text-large"><?= $estate->price?>€</span>
                     </div>
                     <div class="uk-text-bold"><?= $estate->surface?> m<sup>2</sup> | <?= $estate->numberOfRooms?> room<?= $estate->numberOfRooms > 1 ? "s": ""?></div>
                     <p class="uk-text-meta"><?= $estate->cityName?> | <?= $estate->municipalityName ?> | <?= $estate->microLocationName?></p>
-                    <p><?= $estate->description?></p>
+                    <p><?= strlen($estate->description) > 100 ? substr($estate->description, 0, 100) . "..." : $estate->description?></p>
                 </div>
             </div>
         </div>

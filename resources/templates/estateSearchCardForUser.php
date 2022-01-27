@@ -21,7 +21,7 @@ use Amdrija\RealEstate\Application\RequestModels\Estate\EstateForSearchResult; ?
                     </div>
                     <div class="uk-text-bold"><?= $estate->surface?> m<sup>2</sup> | <?= $estate->numberOfRooms?> room<?= $estate->numberOfRooms > 1 ? "s": ""?></div>
                     <p class="uk-text-meta"><?= $estate->cityName?> | <?= $estate->municipalityName ?> | <?= $estate->microLocationName?></p>
-                    <p><?= $estate->description?></p>
+                    <p><?= substr($estate->description, 0, 100) . "..."?></p>
                 </div>
             </div>
         </div>
