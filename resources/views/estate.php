@@ -6,7 +6,7 @@
 
 use Amdrija\RealEstate\Application\RequestModels\Estate\EstateSingle; ?>
 
-<div class="uk-margin-large-top">
+<div class="uk-margin-large-top uk-margin-large-bottom">
 <h1><?= $estate->name?>
     <div class="uk-label uk-text-large"><?= $estate->price?>€</div></h1>
     <div class="uk-child-width-1-2@m" uk-grid>

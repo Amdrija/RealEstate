@@ -23,7 +23,6 @@ class UserForEstate
             $this->agencyStreet = null;
             $this->agencyCity = null;
         } else {
-
             $this->agencyName = $agency['name'];
             $this->agencyPIB = $agency['pib'];
             $this->agencyStreet = $agency['street'];

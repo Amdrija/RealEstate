@@ -3,13 +3,14 @@
 namespace Amdrija\RealEstate\MVC\Controllers;
 
 use Amdrija\RealEstate\Application\Interfaces\IBusLineRepository;
+use Amdrija\RealEstate\Application\Interfaces\ICityRepository;
 use Amdrija\RealEstate\Application\Interfaces\IConditionTypeRepository;
 use Amdrija\RealEstate\Application\Interfaces\IEstateTypeRepository;
 use Amdrija\RealEstate\Application\Interfaces\IHeatingTypeRepository;
 use Amdrija\RealEstate\Application\Interfaces\IPerkRepository;
 use Amdrija\RealEstate\Application\Interfaces\IStreetRepository;
-use Amdrija\RealEstate\Application\Models\Estate;
 use Amdrija\RealEstate\Application\RequestModels\Estate\AddEstate;
+use Amdrija\RealEstate\Application\RequestModels\Estate\SearchEstate;
 use Amdrija\RealEstate\Application\Services\EstateService;
 use Amdrija\RealEstate\Application\Services\LoginService;
 use Amdrija\RealEstate\Framework\ImageService;
@@ -28,6 +29,7 @@ class EstateController extends FrontController
     private readonly IStreetRepository $streetRepository;
     private readonly IPerkRepository $perkRepository;
     private readonly LoginService $loginService;
+    private readonly ICityRepository $cityRepository;
 
     public function __construct(EstateService            $estateService,
                                 ImageService             $imageService,
@@ -37,7 +39,8 @@ class EstateController extends FrontController
                                 IHeatingTypeRepository   $heatingTypeRepository,
                                 IStreetRepository        $streetRepository,
                                 IPerkRepository          $perkRepository,
-                                LoginService             $loginService)
+                                LoginService             $loginService,
+                                ICityRepository          $cityRepository)
     {
         parent::__construct();
         $this->estateService = $estateService;
@@ -49,6 +52,20 @@ class EstateController extends FrontController
         $this->streetRepository = $streetRepository;
         $this->perkRepository = $perkRepository;
         $this->loginService = $loginService;
+        $this->cityRepository = $cityRepository;
+    }
+
+    public function searchByUser(): Response
+    {
+        $user = $this->loginService->getCurrentUser();
+        $searchEstate = new SearchEstate($this->request->getQueryParameters());
+
+        return $this->buildHtmlResponse('searchEstatesByUser', ['title' => 'Estate',
+            'estateTypes' => $this->estateTypeRepository->getEstateTypes(),
+            'cities' => $this->cityRepository->getCities(),
+            'conditionTypes' => $this->conditionTypeRepository->getConditionTypes(),
+            'paginatedResponse' => $this->estateService->searchEstatesByUserId($searchEstate, $this->request->getQueryParameters(), $user->id),
+            'searchEstate' => $searchEstate]);
     }
 
     public function addEstateIndex(): Response
@@ -79,7 +96,7 @@ class EstateController extends FrontController
             $error = "Bus lines need to be an array";
         }
 
-        if(isset($error)) {
+        if (isset($error)) {
             $this->buildHtmlResponse('addEstate',
                 [
                     'title' => 'Add Estate',

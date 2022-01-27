@@ -186,6 +186,12 @@ class Bootstrap
 
         Router::register(
             'GET',
+            '/estates/userList',
+            ['controller' => EstateController::class, 'action' => 'searchByUser', 'middleware' => [AuthenticationMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
             '/microLocations',
             ['controller' => MicroLocationController::class, 'action' => 'getList', 'middleware' => []]
         );

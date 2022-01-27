@@ -9,6 +9,8 @@ use Amdrija\RealEstate\Application\RequestModels\Estate\SearchEstate;
 
 interface IEstateRepository
 {
+    public function searchEstatesByUser(SearchEstate $estate, string $userId, int $limit, int $offset): array;
+    public function countEstatesByUser(SearchEstate $estate, string $userId): int;
     public function searchEstates(SearchEstate $estate, int $limit, int $offset): array;
     public function countEstates(SearchEstate $estate): int;
 

@@ -247,7 +247,7 @@ class EstateRepository extends Repository implements IEstateRepository
         $agency = null;
         if (!is_null($advertiser['agencyId'])) {
             $agencyStatement = $this->pdo->prepare("
-                SELECT A.name as agencyName, A.pib , S.name as street, A.number, C.name as city
+                SELECT A.name, A.pib , S.name as street, A.number, C.name as city
                 FROM realEstate.Agency A
                 JOIN realEstate.Street S on S.id = A.streetId
                 JOIN realEstate.MicroLocation ML on ML.id = S.microLocationId
@@ -263,5 +263,58 @@ class EstateRepository extends Repository implements IEstateRepository
             new UserForEstate($advertiser, $agency),
             $averagePrice,
             array_map(fn($x) => $x['id'], $rowPerks));
+    }
+
+    public function searchEstatesByUser(SearchEstate $estate, string $userId, int $limit, int $offset): array
+    {
+        $query = "SELECT E.id, E.name, C.name as cityName, M.name as municipalityName, ML.name as microLocationName, E.surface, E.numberOfRooms, E.floor, E.description, E.price, ML.id as microLocationId, E.images";
+
+        $query .= " " . $this->getQueryPartForSearch($estate);
+        $query .= " AND E.advertiserId = :advertiserId";
+        $query .= "\nLIMIT $limit";
+        $queryParameters = $estate->convertToArray();
+        $queryParameters['advertiserId'] = $userId;
+        if ($offset > 0) {
+            $query .= " OFFSET  $offset";
+        }
+
+        $statement = $this->pdo->prepare($query);
+
+        $statement->execute($queryParameters);
+        $rows = $statement->fetchAll();
+        $averagePriceByMicroLocation = $this->getAveragePriceByMicroLocation();
+
+        $results = [];
+        foreach ($rows as $row) {
+            $results []= new EstateForSearchResult(
+                $row['id'],
+                $row['name'],
+                $row['cityName'],
+                $row['municipalityName'],
+                $row['microLocationName'],
+                $row['surface'],
+                $row['numberOfRooms'],
+                $row['floor'],
+                $row['description'],
+                $row['price'],
+                $averagePriceByMicroLocation[$row['microLocationId']],
+                $row['images']
+            );
+        }
+
+        return $results;
+    }
+
+    public function countEstatesByUser(SearchEstate $estate, string $userId): int
+    {
+        $query = "SELECT COUNT(*) ";
+        $query .= $this->getQueryPartForSearch($estate);
+        $query .= " AND E.advertiserId = :advertiserId";
+        $statement = $this->pdo->prepare($query);
+        $queryParameters = $estate->convertToArray();
+        $queryParameters['advertiserId'] = $userId;
+        $statement->execute($queryParameters);
+
+        return $statement->fetchColumn();
     }
 }

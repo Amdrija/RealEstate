@@ -41,6 +41,13 @@ class EstateService
         return  new PaginatedResponse($pagination,$this->estateRepository->searchEstates($estate, $pagination->pageSize, $pagination->getOffset()));
     }
 
+    public function searchEstatesByUserId(SearchEstate $estate, array $queryParameters, string $userId): PaginatedResponse
+    {
+        $userCount = $this->estateRepository->countEstatesByUser($estate, $userId);
+        $pagination = Pagination::create($queryParameters, $userCount);
+        return  new PaginatedResponse($pagination,$this->estateRepository->searchEstatesByUser($estate, $userId, $pagination->pageSize, $pagination->getOffset()));
+    }
+
     public function getLatest(): array
     {
         return $this->estateRepository->getLatest(self::LATEST_ESTATE_COUNT);
