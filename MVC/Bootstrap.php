@@ -10,6 +10,7 @@ use Amdrija\RealEstate\Application\Infrastructure\MySQL\EstateRepository;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\EstateTypeRepository;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\HeatingTypeRepository;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\MicroLocationRepository;
+use Amdrija\RealEstate\Application\Infrastructure\MySQL\MunicipalityRepository;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\PerkRepository;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\StreetRepository;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\UserRepository;
@@ -21,6 +22,7 @@ use Amdrija\RealEstate\Application\Interfaces\IEstateRepository;
 use Amdrija\RealEstate\Application\Interfaces\IEstateTypeRepository;
 use Amdrija\RealEstate\Application\Interfaces\IHeatingTypeRepository;
 use Amdrija\RealEstate\Application\Interfaces\IMicroLocationRepository;
+use Amdrija\RealEstate\Application\Interfaces\IMunicipalityRepository;
 use Amdrija\RealEstate\Application\Interfaces\IPerkRepository;
 use Amdrija\RealEstate\Application\Interfaces\IStreetRepository;
 use Amdrija\RealEstate\Application\Interfaces\IUserRepository;
@@ -98,6 +100,7 @@ class Bootstrap
         DependencyInjectionContainer::register(IBusLineRepository::class, BusLineRepository::class);
         DependencyInjectionContainer::register(IPerkRepository::class, PerkRepository::class);
         DependencyInjectionContainer::register(IMicroLocationRepository::class, MicroLocationRepository::class);
+        DependencyInjectionContainer::register(IMunicipalityRepository::class, MunicipalityRepository::class);
     }
 
     public static function RegisterMiddleware()
@@ -306,6 +309,30 @@ class Bootstrap
             'GET',
             '/admin/agencies/delete/{:id}',
             ['controller' => AgencyController::class, 'action' => 'deleteAgency', 'middleware' => [AdminMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/admin/microLocations',
+            ['controller' => MicroLocationController::class, 'action' => 'getMicroLocations', 'middleware' => [AdminMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/admin/microLocations/add',
+            ['controller' => MicroLocationController::class, 'action' => 'createMicroLocationIndex', 'middleware' => [AdminMiddleware::class]]
+        );
+
+        Router::register(
+            'POST',
+            '/admin/microLocations/add',
+            ['controller' => MicroLocationController::class, 'action' => 'createMicroLocation', 'middleware' => [AdminMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/admin/microLocations/delete/{:id}',
+            ['controller' => MicroLocationController::class, 'action' => 'deleteMicroLocation', 'middleware' => [AdminMiddleware::class]]
         );
     }
 }
