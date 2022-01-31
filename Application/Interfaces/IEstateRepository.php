@@ -28,4 +28,6 @@ interface IEstateRepository
     public function editEstate(AddEstate $estate, array $images, string $id): Estate;
 
     public function deleteEstate(Estate $estate);
+
+    public function sellEstate(string $id);
 }

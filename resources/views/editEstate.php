@@ -64,7 +64,7 @@
             <label class="" for="constructionDate-input">Construction date</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
                 <span class="uk-form-icon uk-form-icon" uk-icon="icon: calendar"></span>
-                <input class="uk-input uk-width-1-1" type="date" value="<?= $estate->constructionDate->format("m-d-Y")?>" id="constructionDate-input" name="constructionDate" required>
+                <input class="uk-input uk-width-1-1" type="date" value="<?= $estate->constructionDate->format("m/d/Y")?>" id="constructionDate-input" name="constructionDate" required>
             </div>
             <label class="" for="condition-input">Condition</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
@@ -145,6 +145,7 @@
             <div class="uk-flex uk-flex-between uk-margin-large-top">
                 <!-- This is a button toggling the modal -->
                 <button class="uk-button uk-button-danger uk-margin-small-right" type="button" uk-toggle="target: #modal-example">Delete</button>
+                <a href="/estates/sell/<?= $estate->id?>" class="uk-button uk-button-default uk-margin-small-right">Sell</a>
 
                 <input type="submit" class="uk-button uk-button-primary" value="Edit">
             </div>

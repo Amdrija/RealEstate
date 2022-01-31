@@ -158,7 +158,8 @@ class EstateRepository extends Repository implements IEstateRepository
     {
         $estates = [];
         foreach($this->pdo->query("SELECT id, name, price, surface, busLines, images, numberOfRooms 
-            FROM realEstate.Estate 
+            FROM realEstate.Estate
+            WHERE sold = false
             ORDER BY dateAdded DESC 
             LIMIT $count")->fetchAll() as $row)
         {
@@ -172,6 +173,7 @@ class EstateRepository extends Repository implements IEstateRepository
     {
         $query = "SELECT COUNT(*) ";
         $query .= $this->getQueryPartForSearch($estate);
+        $query .= " AND E.sold = false";
         $statement = $this->pdo->prepare($query);
         $queryParameters = $estate->convertToArray();
         $statement->execute($queryParameters);
@@ -184,6 +186,7 @@ class EstateRepository extends Repository implements IEstateRepository
         $query = "SELECT E.id, E.name, C.name as cityName, M.name as municipalityName, ML.name as microLocationName, E.surface, E.numberOfRooms, E.floor, E.description, E.price, ML.id as microLocationId, E.images";
 
         $query .= " " . $this->getQueryPartForSearch($estate);
+        $query .= " AND E.sold = false";
         $query .= "\nLIMIT $limit";
         $queryParameters = $estate->convertToArray();
         if ($offset > 0) {
@@ -210,7 +213,8 @@ class EstateRepository extends Repository implements IEstateRepository
                 $row['description'],
                 $row['price'],
                 $averagePriceByMicroLocation[$row['microLocationId']],
-                $row['images']
+                $row['images'],
+                false
             );
         }
 
@@ -220,6 +224,7 @@ class EstateRepository extends Repository implements IEstateRepository
     public function getAveragePriceByMicroLocation(): array {
         $rows = $this->pdo->query("SELECT S.microLocationId, AVG(E.price / E.surface) as averagePrice FROM realEstate.Estate E
             JOIN realEstate.Street S on S.id = E.streetId
+            WHERE E.sold = false
             GROUP BY S.microLocationId;")->fetchAll();
 
         $priceByMicroLocation = [];
@@ -275,7 +280,7 @@ class EstateRepository extends Repository implements IEstateRepository
             JOIN realEstate.MicroLocation ML on S.microLocationId = ML.id
             JOIN realEstate.Municipality M on ML.municipalityId = M.id
             JOIN realEstate.City C on M.cityId = C.id
-            WHERE E.id = :id");
+            WHERE E.id = :id AND E.sold = false");
         $statementEstate->execute(['id' => $id]);
         $rowEstate = $statementEstate->fetch();
 
@@ -327,7 +332,7 @@ class EstateRepository extends Repository implements IEstateRepository
 
     public function searchEstatesByUser(SearchEstate $estate, string $userId, int $limit, int $offset): array
     {
-        $query = "SELECT E.id, E.name, C.name as cityName, M.name as municipalityName, ML.name as microLocationName, E.surface, E.numberOfRooms, E.floor, E.description, E.price, ML.id as microLocationId, E.images";
+        $query = "SELECT E.id, E.name, C.name as cityName, M.name as municipalityName, ML.name as microLocationName, E.surface, E.numberOfRooms, E.floor, E.description, E.price, ML.id as microLocationId, E.images, E.sold";
 
         $query .= " " . $this->getQueryPartForSearch($estate);
         $query .= " AND E.advertiserId = :advertiserId";
@@ -358,7 +363,8 @@ class EstateRepository extends Repository implements IEstateRepository
                 $row['description'],
                 $row['price'],
                 $averagePriceByMicroLocation[$row['microLocationId']],
-                $row['images']
+                $row['images'],
+                $row['sold']
             );
         }
 
@@ -381,7 +387,7 @@ class EstateRepository extends Repository implements IEstateRepository
     public function getEstateForEdit(string $id): ?EstateForEditing
     {
         $statement = $this->pdo->prepare("SELECT id, price, name, surface, numberOfRooms, typeId, constructionDate,
-            conditionId, heatingId, floor, totalFloors, description, streetId, streetNumber, busLines, images, advertiserId
+            conditionId, heatingId, floor, totalFloors, description, streetId, streetNumber, busLines, images, advertiserId, sold
             FROM realEstate.Estate WHERE id = :id");
 
         $statement->execute(['id' => $id]);
@@ -408,6 +414,14 @@ class EstateRepository extends Repository implements IEstateRepository
 
     public function getEstateById(string $id): ?Estate
     {
-        return $this->getById(Estate::class, $id);
+        $statement = $this->pdo->prepare("SELECT * FROM realEstate.Estate WHERE id = :id AND sold = false");
+        $statement->execute(['id' => $id]);
+        return ArraySerializer::deserialize(Estate::class, $statement->fetch());
+    }
+
+    public function sellEstate(string $id)
+    {
+        $statement = $this->pdo->prepare("UPDATE realEstate.Estate SET sold = 1 WHERE id = :id");
+        $statement->execute(['id'=>$id]);
     }
 }

@@ -213,6 +213,12 @@ class Bootstrap
             '/estates/delete/{:id}',
             ['controller' => EstateController::class, 'action' => 'deleteEstate', 'middleware' => [AuthenticationMiddleware::class]]
         );
+
+        Router::register(
+            'GET',
+            '/estates/sell/{:id}',
+            ['controller' => EstateController::class, 'action' => 'sellEstate', 'middleware' => [AuthenticationMiddleware::class]]
+        );
     }
 
     /**

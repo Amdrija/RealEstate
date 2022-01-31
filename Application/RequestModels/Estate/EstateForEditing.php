@@ -24,4 +24,5 @@ class EstateForEditing
     public array $perks = [];
     public string $advertiserId;
     public string $images;
+    public string $sold;
 }

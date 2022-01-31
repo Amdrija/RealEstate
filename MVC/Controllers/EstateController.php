@@ -2,7 +2,9 @@
 
 namespace Amdrija\RealEstate\MVC\Controllers;
 
+use Amdrija\RealEstate\Application\Exceptions\Estate\CannotEditSoldEstateException;
 use Amdrija\RealEstate\Application\Exceptions\Estate\EstateNotFoundException;
+use Amdrija\RealEstate\Application\Exceptions\Estate\WrongEstateImageCountException;
 use Amdrija\RealEstate\Application\Interfaces\IBusLineRepository;
 use Amdrija\RealEstate\Application\Interfaces\ICityRepository;
 use Amdrija\RealEstate\Application\Interfaces\IConditionTypeRepository;
@@ -93,12 +95,12 @@ class EstateController extends FrontController
             $error = "Perks need to be an array";
         }
 
-        if (!isset($this->request->getFiles()['busLines'])) {
+        if (!isset($this->request->getBody()['busLines'])) {
             $error = "Bus lines need to be an array";
         }
 
         if (isset($error)) {
-            $this->buildHtmlResponse('addEstate',
+            return $this->buildHtmlResponse('addEstate',
                 [
                     'title' => 'Add Estate',
                     'estateTypes' => $this->estateTypeRepository->getEstateTypes(),
@@ -120,9 +122,23 @@ class EstateController extends FrontController
 
         $estate->perks = array_slice($estate->perks, 1);
 
-        $this->estateService->createEstate($estate,
-            $this->request->getFilesByParameter('images'),
-            $user);
+        try {
+            $this->estateService->createEstate($estate,
+                $this->request->getFilesByParameter('images'),
+                $user);
+        } catch (\Exception $exception) {
+            return $this->buildHtmlResponse('addEstate',
+                [
+                    'title' => 'Add Estate',
+                    'estateTypes' => $this->estateTypeRepository->getEstateTypes(),
+                    'conditionTypes' => $this->conditionTypeRepository->getConditionTypes(),
+                    'heatingTypes' => $this->heatingTypeRepository->getHeatingTypes(),
+                    'streets' => $this->streetRepository->getStreets(),
+                    'busLines' => $this->busLineRepository->getBusLines(),
+                    'perks' => $this->perkRepository->getPerks(),
+                    'error' => $exception->getMessage()
+                ]);
+        }
 
         return new RedirectResponse("/");
     }
@@ -164,12 +180,12 @@ class EstateController extends FrontController
             $error = "Perks need to be an array";
         }
 
-        if (!isset($this->request->getFiles()['busLines'])) {
+        if (!isset($this->request->getBody()['busLines'])) {
             $error = "Bus lines need to be an array";
         }
 
         if (isset($error)) {
-            $this->buildHtmlResponse('editEstate',
+            return $this->buildHtmlResponse('editEstate',
                 [
                     'title' => 'Edit Estate',
                     'estateTypes' => $this->estateTypeRepository->getEstateTypes(),
@@ -191,10 +207,24 @@ class EstateController extends FrontController
 
         $estate->perks = array_slice($estate->perks, 1);
 
-        $this->estateService->editEstate($estate,
-            $this->request->getFilesByParameter('images'),
-            $parameters['id'],
-            $user);
+        try {
+            $this->estateService->editEstate($estate,
+                $this->request->getFilesByParameter('images'),
+                $parameters['id'],
+                $user);
+        } catch (\Exception $exception) {
+            return $this->buildHtmlResponse('editEstate',
+                [
+                    'title' => 'Edit Estate',
+                    'estateTypes' => $this->estateTypeRepository->getEstateTypes(),
+                    'conditionTypes' => $this->conditionTypeRepository->getConditionTypes(),
+                    'heatingTypes' => $this->heatingTypeRepository->getHeatingTypes(),
+                    'streets' => $this->streetRepository->getStreets(),
+                    'busLines' => $this->busLineRepository->getBusLines(),
+                    'perks' => $this->perkRepository->getPerks(),
+                    'error' => $exception->getMessage()
+                ]);
+        }
 
         return new RedirectResponse("/estates/edit/{$parameters['id']}");
     }
@@ -207,6 +237,21 @@ class EstateController extends FrontController
 
         try {
             $this->estateService->deleteEstate($parameters['id'], $this->loginService->getCurrentUser());
+        } catch (EstateNotFoundException) {
+            return ErrorResponseFactory::getResponse("Estate not found.", 404);
+        }
+
+        return new RedirectResponse("/estates/userList");
+    }
+
+    public function sellEstate(array $parameters): Response
+    {
+        if(!isset($parameters['id'])) {
+            return ErrorResponseFactory::getResponse('Id not set.', 400);
+        }
+
+        try {
+            $this->estateService->sellEstate($parameters['id'], $this->loginService->getCurrentUser());
         } catch (EstateNotFoundException) {
             return ErrorResponseFactory::getResponse("Estate not found.", 404);
         }

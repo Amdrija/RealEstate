@@ -22,4 +22,5 @@ class Estate extends Entity
     public int $streetNumber;
     public string $busLines;
     public string $images;
+    public string $sold;
 }

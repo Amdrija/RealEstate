@@ -16,6 +16,7 @@ class EstateForSearchResult
     public int $price;
     public float $averagePrice;
     public string $image;
+    public bool $sold;
 
     public function __construct(string $id,
                                 string $name,
@@ -28,7 +29,8 @@ class EstateForSearchResult
                                 string $description,
                                 int $price,
                                 float $averagePrice,
-                                string $images)
+                                string $images,
+                                bool $sold)
     {
         $this->id = $id;
         $this->name = $name;
@@ -42,5 +44,6 @@ class EstateForSearchResult
         $this->price = $price;
         $this->averagePrice = $averagePrice;
         $this->image = explode(",", $images)[0];
+        $this->sold = $sold;
     }
 }

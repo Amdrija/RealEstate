@@ -86,7 +86,8 @@ CREATE TABLE realEstate.Estate(
                                   streetNumber int unsigned not null,
                                   busLines varchar(40),
                                   images varchar(500) not null,
-                                  dateAdded datetime default current_timestamp not null
+                                  dateAdded datetime default current_timestamp not null,
+                                  sold bool default false not null
 );
 CREATE TABLE realEstate.FavouriteUserEstate(
                                                id int unsigned auto_increment primary key not null,
