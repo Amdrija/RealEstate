@@ -24,6 +24,7 @@ use Amdrija\RealEstate\Application\Interfaces\IMicroLocationRepository;
 use Amdrija\RealEstate\Application\Interfaces\IPerkRepository;
 use Amdrija\RealEstate\Application\Interfaces\IStreetRepository;
 use Amdrija\RealEstate\Application\Interfaces\IUserRepository;
+use Amdrija\RealEstate\Application\Models\Agency;
 use Amdrija\RealEstate\Application\Services\AgencyService;
 use Amdrija\RealEstate\Application\Services\CityService;
 use Amdrija\RealEstate\Application\Services\EstateService;
@@ -32,6 +33,7 @@ use Amdrija\RealEstate\Application\Services\UserService;
 use Amdrija\RealEstate\Framework\DependencyInjectionContainer;
 use Amdrija\RealEstate\Framework\ImageService;
 use Amdrija\RealEstate\Framework\Router;
+use Amdrija\RealEstate\MVC\Controllers\AgencyController;
 use Amdrija\RealEstate\MVC\Controllers\EstateController;
 use Amdrija\RealEstate\MVC\Controllers\MicroLocationController;
 use Amdrija\RealEstate\MVC\Controllers\UserController;
@@ -70,6 +72,7 @@ class Bootstrap
         DependencyInjectionContainer::registerClass(UserController::class);
         DependencyInjectionContainer::registerClass(EstateController::class);
         DependencyInjectionContainer::registerClass(MicroLocationController::class);
+        DependencyInjectionContainer::registerClass(AgencyController::class);
     }
 
     public static function RegisterServices()
@@ -279,6 +282,30 @@ class Bootstrap
             'GET',
             '/admin/users/add',
             ['controller' => UserController::class, 'action' => 'addUserIndex', 'middleware' => [AdminMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/admin/agencies',
+            ['controller' => AgencyController::class, 'action' => 'getAgencies', 'middleware' => [AdminMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/admin/agencies/add',
+            ['controller' => AgencyController::class, 'action' => 'createAgencyIndex', 'middleware' => [AdminMiddleware::class]]
+        );
+
+        Router::register(
+            'POST',
+            '/admin/agencies/add',
+            ['controller' => AgencyController::class, 'action' => 'createAgency', 'middleware' => [AdminMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/admin/agencies/delete/{:id}',
+            ['controller' => AgencyController::class, 'action' => 'deleteAgency', 'middleware' => [AdminMiddleware::class]]
         );
     }
 }

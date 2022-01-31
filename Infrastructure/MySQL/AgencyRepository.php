@@ -12,4 +12,19 @@ class AgencyRepository extends Repository implements IAgencyRepository
     {
         return parent::getList(Agency::class);
     }
+
+    public function createAgency(Agency $agency): Agency
+    {
+        return $this->insert($agency);
+    }
+
+    public function deleteAgency(Agency $agency)
+    {
+        $this->delete($agency);
+    }
+
+    public function getAgencyById(string $id): ?Agency
+    {
+        return $this->getById(Agency::class, $id);
+    }
 }
