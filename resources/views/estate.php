@@ -8,7 +8,7 @@ use Amdrija\RealEstate\Application\RequestModels\Estate\EstateSingle; ?>
 
 <div class="uk-margin-large-top uk-margin-large-bottom">
 <h1><?= $estate->name?>
-    <div class="uk-label uk-text-large"><?= $estate->price?>€</div>
+    <div class="uk-label uk-text-large <?= $estate->isPriceLessThanAverage() ? "uk-label-success" : "uk-label-danger"?>"><?= $estate->price?>€</div>
     <?php if(isset($_SESSION['userId'])):?>
         <a href="/favourites/<?= $estate->isFavourite ? "remove" : "add"?>/<?= $estate->id?>" uk-icon="icon: star" style="color: <?= $estate->isFavourite ? "darkorange" : "black"?>"></a>
     <?php endif;?>

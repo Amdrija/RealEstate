@@ -46,4 +46,9 @@ class EstateForSearchResult
         $this->image = explode(",", $images)[0];
         $this->sold = $sold;
     }
+
+    public function isPriceLessThanAverage(): bool
+    {
+        return $this->price / $this->surface < $this->averagePrice;
+    }
 }

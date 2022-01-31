@@ -57,4 +57,9 @@ class EstateSingle
         $this->perks = $perks;
         $this->isFavourite = $isFavourite;
     }
+
+    public function isPriceLessThanAverage(): bool
+    {
+        return $this->price / $this->surface < $this->averagePrice;
+    }
 }

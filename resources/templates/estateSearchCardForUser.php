@@ -17,7 +17,7 @@ use Amdrija\RealEstate\Application\RequestModels\Estate\EstateForSearchResult; ?
                 <div class="uk-card-body">
                     <div class="uk-flex uk-flex-between">
                         <p class="uk-card-title uk-margin-remove"><?= $estate->name?></p>
-                        <div class="uk-label uk-text-large"><?= $estate->price?>€</div>
+                        <div class="uk-label uk-text-large <?= $estate->isPriceLessThanAverage() ? "uk-label-success" : "uk-label-danger"?>"><?= $estate->price?>€</div>
                     </div>
                     <div class="uk-text-bold"><?= $estate->surface?> m<sup>2</sup> | <?= $estate->numberOfRooms?> room<?= $estate->numberOfRooms > 1 ? "s": ""?></div>
                     <p class="uk-text-meta"><?= $estate->cityName?> | <?= $estate->municipalityName ?> | <?= $estate->microLocationName?></p>
