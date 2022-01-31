@@ -219,6 +219,24 @@ class Bootstrap
             '/estates/sell/{:id}',
             ['controller' => EstateController::class, 'action' => 'sellEstate', 'middleware' => [AuthenticationMiddleware::class]]
         );
+
+        Router::register(
+            'GET',
+            '/favourites/add/{:id}',
+            ['controller' => EstateController::class, 'action' => 'addToFavourites', 'middleware' => [AuthenticationMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/favourites/remove/{:id}',
+            ['controller' => EstateController::class, 'action' => 'removeFromFavourites', 'middleware' => [AuthenticationMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/favourites',
+            ['controller' => EstateController::class, 'action' => 'favourites', 'middleware' => [AuthenticationMiddleware::class]]
+        );
     }
 
     /**

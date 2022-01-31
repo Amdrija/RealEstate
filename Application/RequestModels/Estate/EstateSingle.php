@@ -29,8 +29,9 @@ class EstateSingle
     public array $images;
     public float $averagePrice;
     public array $perks;
+    public bool $isFavourite;
 
-    public function __construct(array $row, UserForEstate $advertiser, float $averagePrice, array $perks)
+    public function __construct(array $row, UserForEstate $advertiser, float $averagePrice, array $perks, bool $isFavourite)
     {
         $this->id = $row['id'];
         $this->price = $row['price'];
@@ -54,5 +55,6 @@ class EstateSingle
         $this->images = explode(",", $row['images']);
         $this->averagePrice = $averagePrice;
         $this->perks = $perks;
+        $this->isFavourite = $isFavourite;
     }
 }

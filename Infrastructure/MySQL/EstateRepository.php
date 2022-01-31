@@ -5,6 +5,7 @@ namespace Amdrija\RealEstate\Application\Infrastructure\MySQL;
 use Amdrija\RealEstate\Application\Interfaces\IEstateRepository;
 use Amdrija\RealEstate\Application\Models\Estate;
 use Amdrija\RealEstate\Application\Models\Perk;
+use Amdrija\RealEstate\Application\Models\User;
 use Amdrija\RealEstate\Application\RequestModels\Estate\AddEstate;
 use Amdrija\RealEstate\Application\RequestModels\Estate\EstateForEditing;
 use Amdrija\RealEstate\Application\RequestModels\Estate\EstateForSearchResult;
@@ -267,7 +268,7 @@ class EstateRepository extends Repository implements IEstateRepository
         return $query;
     }
 
-    public function getSingleEstateById(string $id): ?EstateSingle
+    public function getSingleEstateById(string $id, ?User $user): ?EstateSingle
     {
         $statementEstate = $this->pdo->prepare("SELECT E.*, CT.name as 'condition', ET.name as 'type', 
                HT.name as 'heating', S.name as street, ML.name as microLocation,
@@ -323,11 +324,19 @@ class EstateRepository extends Repository implements IEstateRepository
             $agency = $agencyStatement->fetch();
         }
 
+        $isFavourite = false;
+        if (!is_null($user)) {
+            $statement = $this->pdo->prepare("SELECT * FROM realEstate.FavouriteUserEstate WHERE userId = :userId AND estateId = :estateId");
+            $statement->execute(['userId' => $user->id, 'estateId' => $id]);
+            $isFavourite = $statement->rowCount() > 0;
+        }
+
 
         return new EstateSingle($rowEstate,
             new UserForEstate($advertiser, $agency),
             $averagePrice,
-            array_map(fn($x) => $x['id'], $rowPerks));
+            array_map(fn($x) => $x['id'], $rowPerks),
+            $isFavourite);
     }
 
     public function searchEstatesByUser(SearchEstate $estate, string $userId, int $limit, int $offset): array
@@ -423,5 +432,68 @@ class EstateRepository extends Repository implements IEstateRepository
     {
         $statement = $this->pdo->prepare("UPDATE realEstate.Estate SET sold = 1 WHERE id = :id");
         $statement->execute(['id'=>$id]);
+    }
+
+    public function addToFavourites(Estate $estate, User $user)
+    {
+        $statement = $this->pdo->prepare("INSERT INTO realEstate.FavouriteUserEstate(userId, estateId)
+            VALUES(:userId, :estateId)");
+        $statement->execute(['userId' => $user->id, 'estateId' => $estate->id]);
+    }
+
+    public function countFavourites(User $user): int
+    {
+        $statement = $this->pdo->prepare("SELECT COUNT(*) 
+            FROM realEstate.FavouriteUserEstate 
+            WHERE userId = :userId");
+        $statement->execute(['userId' => $user->id]);
+        return $statement->fetchColumn();
+    }
+
+    public function removeFromFavourites(Estate $estate, User $user)
+    {
+        $statement = $this->pdo->prepare("DELETE
+            FROM realEstate.FavouriteUserEstate 
+            WHERE estateId = :estateId AND userId = :userId");
+        $statement->execute(['estateId' => $estate->id, 'userId' => $user->id]);
+    }
+
+    public function getFavourites(User $user): array
+    {
+        $statement = $this->pdo->prepare("SELECT E.id, E.name, C.name as cityName, 
+            M.name as municipalityName, ML.name as microLocationName, E.surface, E.numberOfRooms, 
+            E.floor, E.description, E.price, ML.id as microLocationId, E.images, E.sold
+            FROM realEstate.Estate E
+            JOIN realEstate.Street S on E.streetId = S.id
+            JOIN realEstate.MicroLocation ML on ML.id = S.microLocationId
+            JOIN realEstate.Municipality M on ML.municipalityId = M.id
+            JOIN realEstate.City C on M.cityId = C.id
+            JOIN realEstate.FavouriteUserEstate FU on FU.estateId = E.id
+            WHERE FU.userId = :userId");
+
+        $statement->execute(['userId' => $user->id]);
+        $rows = $statement->fetchAll();
+        $averagePriceByMicroLocation = $this->getAveragePriceByMicroLocation();
+
+        $results = [];
+        foreach ($rows as $row) {
+            $results []= new EstateForSearchResult(
+                $row['id'],
+                $row['name'],
+                $row['cityName'],
+                $row['municipalityName'],
+                $row['microLocationName'],
+                $row['surface'],
+                $row['numberOfRooms'],
+                $row['floor'],
+                $row['description'],
+                $row['price'],
+                $averagePriceByMicroLocation[$row['microLocationId']],
+                $row['images'],
+                $row['sold']
+            );
+        }
+
+        return $results;
     }
 }

@@ -8,6 +8,7 @@ use Amdrija\RealEstate\Application\Interfaces\IEstateTypeRepository;
 use Amdrija\RealEstate\Application\Interfaces\IPerkRepository;
 use Amdrija\RealEstate\Application\RequestModels\Estate\SearchEstate;
 use Amdrija\RealEstate\Application\Services\EstateService;
+use Amdrija\RealEstate\Application\Services\LoginService;
 use Amdrija\RealEstate\Framework\ArraySerializer;
 use Amdrija\RealEstate\Framework\Responses\ErrorResponseFactory;
 use Amdrija\RealEstate\Framework\Responses\Response;
@@ -19,8 +20,9 @@ class HomeController extends FrontController
     private readonly ICityRepository $cityRepository;
     private readonly IConditionTypeRepository $conditionTypeRepository;
     private readonly IPerkRepository $perkRepository;
+    private readonly LoginService $loginService;
 
-    public function __construct(EstateService $estateService, IEstateTypeRepository $estateTypeRepository, ICityRepository $cityRepository, \Amdrija\RealEstate\Application\Interfaces\IConditionTypeRepository $conditionTypeRepository, \Amdrija\RealEstate\Application\Interfaces\IPerkRepository $perkRepository)
+    public function __construct(EstateService $estateService, IEstateTypeRepository $estateTypeRepository, ICityRepository $cityRepository, \Amdrija\RealEstate\Application\Interfaces\IConditionTypeRepository $conditionTypeRepository, \Amdrija\RealEstate\Application\Interfaces\IPerkRepository $perkRepository, \Amdrija\RealEstate\Application\Services\LoginService $loginService)
     {
         parent::__construct();
         $this->estateService = $estateService;
@@ -28,6 +30,7 @@ class HomeController extends FrontController
         $this->cityRepository = $cityRepository;
         $this->conditionTypeRepository = $conditionTypeRepository;
         $this->perkRepository = $perkRepository;
+        $this->loginService = $loginService;
     }
 
     public function index(): Response
@@ -56,7 +59,7 @@ class HomeController extends FrontController
             return ErrorResponseFactory::getResponse('Id not set.', 400);
         }
 
-        $estate = $this->estateService->getEstateSingle($parameters['id']);
+        $estate = $this->estateService->getEstateSingle($parameters['id'], $this->loginService->getCurrentUser());
         if(is_null($estate)) {
             return ErrorResponseFactory::getResponse('Estate not found', 404);
         }

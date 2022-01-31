@@ -4,6 +4,7 @@ namespace Amdrija\RealEstate\Application\Services;
 
 use Amdrija\RealEstate\Application\Exceptions\Estate\CannotEditSoldEstateException;
 use Amdrija\RealEstate\Application\Exceptions\Estate\EstateNotFoundException;
+use Amdrija\RealEstate\Application\Exceptions\Estate\MaximumFavouriteEstatesException;
 use Amdrija\RealEstate\Application\Exceptions\Estate\WrongEstateImageCountException;
 use Amdrija\RealEstate\Application\Interfaces\IEstateRepository;
 use Amdrija\RealEstate\Application\Models\Estate;
@@ -25,6 +26,7 @@ class EstateService
     private const LATEST_ESTATE_COUNT = 6;
     private const MIN_IMAGE_COUNT = 3;
     private const MAX_IMAGE_COUNT = 6;
+    private const MAX_FAVOURITE_COUNT = 5;
 
     public function __construct(IEstateRepository $estateRepository, ImageService $imageService)
     {
@@ -69,9 +71,9 @@ class EstateService
         return $this->estateRepository->getLatest(self::LATEST_ESTATE_COUNT);
     }
 
-    public function getEstateSingle(string $id): ?EstateSingle
+    public function getEstateSingle(string $id, ?User $user): ?EstateSingle
     {
-        return $this->estateRepository->getSingleEstateById($id);
+        return $this->estateRepository->getSingleEstateById($id, $user);
     }
 
     public function getEstateForEdit(string $id, User $user): ?EstateForEditing
@@ -155,5 +157,43 @@ class EstateService
         }
 
         $this->estateRepository->sellEstate($estate->id);
+    }
+
+    /**
+     * @throws EstateNotFoundException
+     * @throws MaximumFavouriteEstatesException
+     */
+    public function addToFavourites(string $id, User $user)
+    {
+        $estate = $this->estateRepository->getEstateById($id);
+
+        if (is_null($estate)) {
+            throw new EstateNotFoundException();
+        }
+
+        if ($this->estateRepository->countFavourites($estate, $user) >= self::MAX_FAVOURITE_COUNT) {
+            throw new MaximumFavouriteEstatesException();
+        }
+
+        $this->estateRepository->addToFavourites($estate, $user);
+    }
+
+    /**
+     * @throws EstateNotFoundException
+     */
+    public function removeFromFavourites(string $id, User $user)
+    {
+        $estate = $this->estateRepository->getEstateById($id);
+
+        if (is_null($estate)) {
+            throw new EstateNotFoundException();
+        }
+
+        $this->estateRepository->removeFromFavourites($estate, $user);
+    }
+
+    public function getFavouriteEstates(User $user, array $queryParameters): array
+    {
+        return  $this->estateRepository->getFavourites($user);
     }
 }

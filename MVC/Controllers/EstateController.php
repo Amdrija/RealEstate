@@ -258,4 +258,49 @@ class EstateController extends FrontController
 
         return new RedirectResponse("/estates/userList");
     }
+
+    public function addToFavourites(array $parameters): Response
+    {
+        if(!isset($parameters['id'])) {
+            return ErrorResponseFactory::getResponse('Id not set.', 400);
+        }
+
+        try {
+            $this->estateService->addToFavourites($parameters['id'], $this->loginService->getCurrentUser());
+        } catch (EstateNotFoundException $exception){
+            return ErrorResponseFactory::getResponse($exception->getMessage(), 404);
+        }
+        catch (\Exception $exception) {
+            return ErrorResponseFactory::getResponse($exception->getMessage(), 400);
+        }
+
+        return new RedirectResponse("/estates/search/{$parameters['id']}");
+    }
+
+    public function removeFromFavourites(array $parameters): Response
+    {
+        if(!isset($parameters['id'])) {
+            return ErrorResponseFactory::getResponse('Id not set.', 400);
+        }
+
+        try {
+            $this->estateService->removeFromFavourites($parameters['id'], $this->loginService->getCurrentUser());
+        } catch (EstateNotFoundException $exception){
+            return ErrorResponseFactory::getResponse($exception->getMessage(), 404);
+        }
+        catch (\Exception $exception) {
+            return ErrorResponseFactory::getResponse($exception->getMessage(), 400);
+        }
+
+        return new RedirectResponse("/estates/search/{$parameters['id']}");
+    }
+
+    public function favourites(): Response
+    {
+        $user = $this->loginService->getCurrentUser();
+
+        return $this->buildHtmlResponse('favouriteEstates', ['title' => 'Favourite Estates',
+            'favouriteEstates' => $this->estateService->getFavouriteEstates($user, $this->request->getQueryParameters())
+        ]);
+    }
 }
