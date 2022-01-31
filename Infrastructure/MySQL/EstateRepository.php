@@ -6,6 +6,7 @@ use Amdrija\RealEstate\Application\Interfaces\IEstateRepository;
 use Amdrija\RealEstate\Application\Models\Estate;
 use Amdrija\RealEstate\Application\Models\Perk;
 use Amdrija\RealEstate\Application\RequestModels\Estate\AddEstate;
+use Amdrija\RealEstate\Application\RequestModels\Estate\EstateForEditing;
 use Amdrija\RealEstate\Application\RequestModels\Estate\EstateForSearchResult;
 use Amdrija\RealEstate\Application\RequestModels\Estate\EstateSingle;
 use Amdrija\RealEstate\Application\RequestModels\Estate\EstateSummary;
@@ -77,6 +78,65 @@ class EstateRepository extends Repository implements IEstateRepository
                 'images' => join(", ", $images),
                 'name' => $estate->name
             ]);
+
+            /* @var $perk Perk*/
+            foreach ($estate->perks as $perk) {
+                $statementPerk = $this->pdo->prepare("INSERT INTO realEstate.EstatePerk(perkId, estateId) VALUES (:perkId, :estateId)");
+                $statementPerk->execute(['perkId' => $perk, 'estateId' => $id]);
+            }
+
+            $this->pdo->commit();
+        } catch (Exception $e) {
+            $this->pdo->rollback();
+            throw $e;
+        }
+
+        /* TODO: Change return*/
+        return new Estate();
+    }
+
+    public function editEstate(AddEstate $estate, array $images, string $id): Estate
+    {
+        try {
+            $this->pdo->beginTransaction();
+            $statementEstate = $this->pdo->prepare("UPDATE realEstate.Estate SET 
+                          price = :price,
+                          surface = :surface,
+                          numberOfRooms = :numberOfRooms,
+                          typeId = :typeId,
+                          constructionDate = :constructionDate,
+                          conditionId = :conditionId,
+                          heatingId = :heatingId,
+                          floor = :floor,
+                          totalFloors = :totalFloors,
+                          description = :description,
+                          streetId = :streetId,
+                          streetNumber = :streetNumber,
+                          busLines = :busLines,
+                          images = :images,
+                          name = :name WHERE id = :id");
+
+            $statementEstate->execute([
+                'id' => $id,
+                'price' => $estate->price,
+                'surface' => $estate->surface,
+                'numberOfRooms' => $estate->numberOfRooms,
+                'typeId' => $estate->typeId,
+                'constructionDate' => $estate->constructionDate->format("Y-m-d"),
+                'conditionId' => $estate->conditionId,
+                'heatingId' => $estate->heatingId,
+                'floor' => $estate->floor,
+                'totalFloors' => $estate->totalFloors,
+                'description' => $estate->description,
+                'streetId' => $estate->streetId,
+                'streetNumber' => $estate->streetNumber,
+                'busLines' => join(", ", $estate->busLines),
+                'images' => join(", ", $images),
+                'name' => $estate->name
+            ]);
+
+            $deletePerksStatement = $this->pdo->prepare("DELETE FROM realEstate.EstatePerk WHERE estateId = :id");
+            $deletePerksStatement->execute(['id' => $id]);
 
             /* @var $perk Perk*/
             foreach ($estate->perks as $perk) {
@@ -316,5 +376,28 @@ class EstateRepository extends Repository implements IEstateRepository
         $statement->execute($queryParameters);
 
         return $statement->fetchColumn();
+    }
+
+    public function getEstateForEdit(string $id): ?EstateForEditing
+    {
+        $statement = $this->pdo->prepare("SELECT price, name, surface, numberOfRooms, typeId, constructionDate,
+            conditionId, heatingId, floor, totalFloors, description, streetId, streetNumber, busLines, images, advertiserId
+            FROM realEstate.Estate WHERE id = :id");
+
+        $statement->execute(['id' => $id]);
+        $estate = $statement->fetch();
+
+        if (is_null($estate)) {
+            return null;
+        }
+
+        $statementPerks = $this->pdo->prepare("SELECT perkId FROM realEstate.EstatePerk WHERE estateId = :id;");
+        $statementPerks->execute(['id' => $id]);
+        $estate['perks'] = [];
+        foreach ($statementPerks->fetchAll() as $row) {
+            $estate['perks'] []= $row['perkId'];
+        }
+
+        return ArraySerializer::deserialize(EstateForEditing::class, $estate);
     }
 }

@@ -195,6 +195,18 @@ class Bootstrap
             '/microLocations',
             ['controller' => MicroLocationController::class, 'action' => 'getList', 'middleware' => []]
         );
+
+        Router::register(
+            'GET',
+            '/estates/edit/{:id}',
+            ['controller' => EstateController::class, 'action' => 'editEstateIndex', 'middleware' => [AuthenticationMiddleware::class]]
+        );
+
+        Router::register(
+            'POST',
+            '/estates/edit/{:id}',
+            ['controller' => EstateController::class, 'action' => 'editEstate', 'middleware' => [AuthenticationMiddleware::class]]
+        );
     }
 
     /**

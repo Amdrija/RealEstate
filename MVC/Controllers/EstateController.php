@@ -125,4 +125,76 @@ class EstateController extends FrontController
 
         return new RedirectResponse("/");
     }
+
+    public function editEstateIndex(array $parameters): Response
+    {
+        if(!isset($parameters['id'])) {
+            return ErrorResponseFactory::getResponse('Id not set.', 400);
+        }
+
+        $estate = $this->estateService->getEstateForEdit($parameters['id'], $this->loginService->getCurrentUser());
+        if (is_null($estate)) {
+            return ErrorResponseFactory::getResponse("Estate not found.", 404);
+        }
+
+        return $this->buildHtmlResponse('editEstate',[
+            'title' => 'Edit Estate',
+            'estate' => $estate,
+            'estateTypes' => $this->estateTypeRepository->getEstateTypes(),
+            'conditionTypes' => $this->conditionTypeRepository->getConditionTypes(),
+            'heatingTypes' => $this->heatingTypeRepository->getHeatingTypes(),
+            'streets' => $this->streetRepository->getStreets(),
+            'busLines' => $this->busLineRepository->getBusLines(),
+            'perks' => $this->perkRepository->getPerks(),
+        ]);
+    }
+
+    public function editEstate(array $parameters): Response
+    {
+        if(!isset($parameters['id'])) {
+            return ErrorResponseFactory::getResponse('Id not set.', 400);
+        }
+
+        if (!isset($this->request->getFiles()['images'])) {
+            $error = "Please add images";
+        }
+
+        if (!isset($this->request->getBody()['perks'])) {
+            $error = "Perks need to be an array";
+        }
+
+        if (!isset($this->request->getFiles()['busLines'])) {
+            $error = "Bus lines need to be an array";
+        }
+
+        if (isset($error)) {
+            $this->buildHtmlResponse('editEstate',
+                [
+                    'title' => 'Edit Estate',
+                    'estateTypes' => $this->estateTypeRepository->getEstateTypes(),
+                    'conditionTypes' => $this->conditionTypeRepository->getConditionTypes(),
+                    'heatingTypes' => $this->heatingTypeRepository->getHeatingTypes(),
+                    'streets' => $this->streetRepository->getStreets(),
+                    'busLines' => $this->busLineRepository->getBusLines(),
+                    'perks' => $this->perkRepository->getPerks(),
+                    'error' => $error
+                ]);
+        }
+        /* @var $estate AddEstate */
+        $estate = $this->request->deseralizeBody(AddEstate::class);
+
+        $user = $this->loginService->getCurrentUser();
+        if (is_null($user)) {
+            return ErrorResponseFactory::getResponse("Unauthorized", 403);
+        }
+
+        $estate->perks = array_slice($estate->perks, 1);
+
+        $this->estateService->editEstate($estate,
+            $this->request->getFilesByParameter('images'),
+            $parameters['id'],
+            $user);
+
+        return new RedirectResponse("/estates/edit/{$parameters['id']}");
+    }
 }

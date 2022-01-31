@@ -6,6 +6,7 @@ use Amdrija\RealEstate\Application\Interfaces\IEstateRepository;
 use Amdrija\RealEstate\Application\Models\Estate;
 use Amdrija\RealEstate\Application\Models\User;
 use Amdrija\RealEstate\Application\RequestModels\Estate\AddEstate;
+use Amdrija\RealEstate\Application\RequestModels\Estate\EstateForEditing;
 use Amdrija\RealEstate\Application\RequestModels\Estate\EstateSingle;
 use Amdrija\RealEstate\Application\RequestModels\Estate\SearchEstate;
 use Amdrija\RealEstate\Application\RequestModels\PaginatedResponse;
@@ -56,5 +57,33 @@ class EstateService
     public function getEstateSingle(string $id): ?EstateSingle
     {
         return $this->estateRepository->getSingleEstateById($id);
+    }
+
+    public function getEstateForEdit(string $id, User $user): ?EstateForEditing
+    {
+        $estate = $this->estateRepository->getEstateForEdit($id);
+
+        if ($user->id != $estate->advertiserId) {
+            return null;
+        }
+
+        return $estate;
+    }
+
+    public function editEstate(AddEstate $estate, array $images, string $id, User $user)
+    {
+        $editEstate = $this->estateRepository->getEstateForEdit($id);
+        if ($user->id != $editEstate->advertiserId) {
+            return null;
+        }
+
+        if (count($images['name']) > 1) {
+            $newImagesNames = array_map(fn ($e, $i) => "{$id}-{$i}{$e}" , $this->imageService->getImageExtensions($images), array_keys($images['name']));
+            $newImagesURI = array_map(fn($i) => $this->imageService->imageRelativePath($i), $newImagesNames);
+            $this->estateRepository->editEstate($estate, $newImagesURI, $id);
+            $this->imageService->moveTemporaryFiles($images, $this->imageService->imageSaveDirectory(), $newImagesNames);
+        } else {
+            $this->estateRepository->editEstate($estate, explode(", ", $editEstate->images), $id);
+        }
     }
 }
