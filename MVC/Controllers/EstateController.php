@@ -2,6 +2,7 @@
 
 namespace Amdrija\RealEstate\MVC\Controllers;
 
+use Amdrija\RealEstate\Application\Exceptions\Estate\EstateNotFoundException;
 use Amdrija\RealEstate\Application\Interfaces\IBusLineRepository;
 use Amdrija\RealEstate\Application\Interfaces\ICityRepository;
 use Amdrija\RealEstate\Application\Interfaces\IConditionTypeRepository;
@@ -196,5 +197,20 @@ class EstateController extends FrontController
             $user);
 
         return new RedirectResponse("/estates/edit/{$parameters['id']}");
+    }
+
+    public function deleteEstate(array $parameters): Response
+    {
+        if(!isset($parameters['id'])) {
+            return ErrorResponseFactory::getResponse('Id not set.', 400);
+        }
+
+        try {
+            $this->estateService->deleteEstate($parameters['id'], $this->loginService->getCurrentUser());
+        } catch (EstateNotFoundException) {
+            return ErrorResponseFactory::getResponse("Estate not found.", 404);
+        }
+
+        return new RedirectResponse("/estates/userList");
     }
 }

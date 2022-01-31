@@ -2,6 +2,7 @@
 
 namespace Amdrija\RealEstate\Application\Services;
 
+use Amdrija\RealEstate\Application\Exceptions\Estate\EstateNotFoundException;
 use Amdrija\RealEstate\Application\Interfaces\IEstateRepository;
 use Amdrija\RealEstate\Application\Models\Estate;
 use Amdrija\RealEstate\Application\Models\User;
@@ -84,6 +85,30 @@ class EstateService
             $this->imageService->moveTemporaryFiles($images, $this->imageService->imageSaveDirectory(), $newImagesNames);
         } else {
             $this->estateRepository->editEstate($estate, explode(", ", $editEstate->images), $id);
+        }
+    }
+
+    /**
+     * @throws EstateNotFoundException
+     */
+    public function deleteEstate(string $id, User $user)
+    {
+        $estate = $this->estateRepository->getEstateById($id);
+        if (is_null($estate)) {
+            throw new EstateNotFoundException();
+        }
+
+        if ($user->id != $estate->advertiserId) {
+            return;
+        }
+
+        $this->estateRepository->deleteEstate($estate);
+        foreach (explode(", ",$estate->images) as $image) {
+            try {
+                $this->imageService->deleteImage($image);
+            } catch (\Exception) {
+
+            }
         }
     }
 }

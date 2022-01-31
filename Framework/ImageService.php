@@ -90,6 +90,14 @@ class ImageService extends FileService
     }
 
     /**
+     * @throws FileNonExistentException
+     */
+    public function deleteImage(string $image)
+    {
+        $this->delete(__DIR__ . '/..' . self::DEFAULT_ASSET_PATH . $image);
+    }
+
+    /**
      * Returns the relative path where the images was saved based on the name.
      * @param string $imageName
      * @return string

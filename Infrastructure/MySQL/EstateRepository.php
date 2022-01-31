@@ -380,7 +380,7 @@ class EstateRepository extends Repository implements IEstateRepository
 
     public function getEstateForEdit(string $id): ?EstateForEditing
     {
-        $statement = $this->pdo->prepare("SELECT price, name, surface, numberOfRooms, typeId, constructionDate,
+        $statement = $this->pdo->prepare("SELECT id, price, name, surface, numberOfRooms, typeId, constructionDate,
             conditionId, heatingId, floor, totalFloors, description, streetId, streetNumber, busLines, images, advertiserId
             FROM realEstate.Estate WHERE id = :id");
 
@@ -399,5 +399,15 @@ class EstateRepository extends Repository implements IEstateRepository
         }
 
         return ArraySerializer::deserialize(EstateForEditing::class, $estate);
+    }
+
+    public function deleteEstate(Estate $estate)
+    {
+        $this->delete($estate);
+    }
+
+    public function getEstateById(string $id): ?Estate
+    {
+        return $this->getById(Estate::class, $id);
     }
 }

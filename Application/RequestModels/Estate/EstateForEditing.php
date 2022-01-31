@@ -6,6 +6,7 @@ use DateTime;
 
 class EstateForEditing
 {
+    public string $id;
     public int $price;
     public string $name;
     public float $surface;

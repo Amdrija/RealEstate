@@ -142,8 +142,24 @@
                 <input class="uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled id="image-input">
             </div>
 
-            <div class="uk-flex uk-flex-right uk-margin-large-top">
-                <input type="submit" class="uk-button uk-button-primary" value="Create">
+            <div class="uk-flex uk-flex-between uk-margin-large-top">
+                <!-- This is a button toggling the modal -->
+                <button class="uk-button uk-button-danger uk-margin-small-right" type="button" uk-toggle="target: #modal-example">Delete</button>
+
+                <input type="submit" class="uk-button uk-button-primary" value="Edit">
+            </div>
+
+
+            <!-- This is the modal -->
+            <div id="modal-example" uk-modal>
+                <div class="uk-modal-dialog uk-modal-body">
+                    <h2 class="uk-modal-title">Delete estate?</h2>
+                    <p>If you delete the esate, you will lose all data.</p>
+                    <p class="uk-text-right">
+                        <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                        <a href="/estates/delete/<?= $estate->id ?>" class="uk-button uk-button-primary" type="button">Save</a>
+                    </p>
+                </div>
             </div>
         </form>
     </div>

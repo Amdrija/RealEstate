@@ -19,9 +19,13 @@ interface IEstateRepository
 
     public function getSingleEstateById(string $id): ?EstateSingle;
 
+    public function getEstateById(string $id): ?Estate;
+
     public function getLatest(int $count): array;
 
     public function createEstate(AddEstate $estate, array $images, string $id, string $advertiserId): Estate;
 
     public function editEstate(AddEstate $estate, array $images, string $id): Estate;
+
+    public function deleteEstate(Estate $estate);
 }
