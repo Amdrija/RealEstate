@@ -64,9 +64,9 @@ class StreetController extends FrontController
         try {
             $this->streetRepository->deleteStreet($street);
         } catch(\Exception) {
-            return new RedirectResponse("/admin/microLocations");
+            return new RedirectResponse("/admin/streets");
         }
 
-        return new RedirectResponse("/admin/microLocations");
+        return new RedirectResponse("/admin/streets");
     }
 }
