@@ -22,12 +22,13 @@
 </head>
 <body>
 <?php include __DIR__ . '/../templates/header.php' ?>
-<div class="uk-container-large uk-margin-auto uk-padding uk-padding-remove-vertical">
+<div class="uk-container-large uk-margin-auto uk-padding uk-padding-remove-vertical" uk-height-viewport="expand: true">
     <?php include $view . '.php' ?>
 </div>
 
 <?php if (file_exists(__DIR__ . "/../../public/js/{$view}.js")): ?>
     <script src="/js/<?= $view ?>.js"></script>
 <?php endif; ?>
+<?php include __DIR__ . '/../templates/footer.php' ?>
 </body>
 </html>
