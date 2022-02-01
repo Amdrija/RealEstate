@@ -38,6 +38,7 @@ use Amdrija\RealEstate\Framework\Router;
 use Amdrija\RealEstate\MVC\Controllers\AgencyController;
 use Amdrija\RealEstate\MVC\Controllers\EstateController;
 use Amdrija\RealEstate\MVC\Controllers\MicroLocationController;
+use Amdrija\RealEstate\MVC\Controllers\StreetController;
 use Amdrija\RealEstate\MVC\Controllers\UserController;
 use Amdrija\RealEstate\MVC\Controllers\HomeController;
 use Amdrija\RealEstate\MVC\Controllers\LoginController;
@@ -75,6 +76,7 @@ class Bootstrap
         DependencyInjectionContainer::registerClass(EstateController::class);
         DependencyInjectionContainer::registerClass(MicroLocationController::class);
         DependencyInjectionContainer::registerClass(AgencyController::class);
+        DependencyInjectionContainer::registerClass(StreetController::class);
     }
 
     public static function RegisterServices()
@@ -333,6 +335,30 @@ class Bootstrap
             'GET',
             '/admin/microLocations/delete/{:id}',
             ['controller' => MicroLocationController::class, 'action' => 'deleteMicroLocation', 'middleware' => [AdminMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/admin/streets',
+            ['controller' => StreetController::class, 'action' => 'getStreets', 'middleware' => [AdminMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/admin/streets/add',
+            ['controller' => StreetController::class, 'action' => 'createStreetIndex', 'middleware' => [AdminMiddleware::class]]
+        );
+
+        Router::register(
+            'POST',
+            '/admin/streets/add',
+            ['controller' => StreetController::class, 'action' => 'createStreet', 'middleware' => [AdminMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/admin/streets/delete/{:id}',
+            ['controller' => StreetController::class, 'action' => 'deleteStreet', 'middleware' => [AdminMiddleware::class]]
         );
     }
 }

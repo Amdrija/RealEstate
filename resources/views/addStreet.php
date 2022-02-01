@@ -1,11 +1,12 @@
 <?php
-/* @var $municipalities array
+/* @var $microLocations array
  */
 ?>
 <div class="uk-margin-auto login-modal uk-margin-top">
-    <h1 class="uk-text-center">Add Micro location</h1>
+    <h1 class="uk-text-center">Add Street</h1>
     <?php use Amdrija\RealEstate\Application\Models\Agency;
     use Amdrija\RealEstate\Application\Models\City;
+    use Amdrija\RealEstate\Application\Models\MicroLocation;
     use Amdrija\RealEstate\Application\Models\Municipality;
     use Amdrija\RealEstate\Application\Models\Street;
     use Amdrija\RealEstate\Application\Models\User;
@@ -20,16 +21,16 @@
         <form method="post">
             <label class="" for="name-input">Name</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
-                <input class="uk-input uk-width-1-1" type="text" placeholder="Micro location name" name="name" id="name-input" required>
+                <input class="uk-input uk-width-1-1" type="text" placeholder="Street name" name="name" id="name-input" required>
             </div>
 
-            <label class="" for="municipality-input">Municipality</label>
+            <label class="" for="microLocation-input">Micro location</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
-                <select class="uk-select" required name="municipalityId" id="municipality-input">
-                    <option value="">Choose municipality...</option>
-                    <?php /* @var $municipality Municipality */?>
-                    <?php foreach ($municipalities as $municipality): ?>
-                        <option value="<?= $municipality->id ?>"><?= $municipality->name ?></option>
+                <select class="uk-select" required name="microLocationId" id="microLocation-input">
+                    <option value="">Choose micro location...</option>
+                    <?php /* @var $microLocation MicroLocation */?>
+                    <?php foreach ($microLocations as $microLocation): ?>
+                        <option value="<?= $microLocation->id ?>"><?= $microLocation->name ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
