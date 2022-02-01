@@ -430,7 +430,7 @@ class EstateRepository extends Repository implements IEstateRepository
 
     public function sellEstate(string $id)
     {
-        $statement = $this->pdo->prepare("UPDATE realEstate.Estate SET sold = 1 WHERE id = :id");
+        $statement = $this->pdo->prepare("UPDATE realEstate.Estate SET sold = 1 AND dateSold = NOW() WHERE id = :id");
         $statement->execute(['id'=>$id]);
     }
 

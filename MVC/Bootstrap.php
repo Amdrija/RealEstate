@@ -12,6 +12,7 @@ use Amdrija\RealEstate\Application\Infrastructure\MySQL\HeatingTypeRepository;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\MicroLocationRepository;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\MunicipalityRepository;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\PerkRepository;
+use Amdrija\RealEstate\Application\Infrastructure\MySQL\StatsRepository;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\StreetRepository;
 use Amdrija\RealEstate\Application\Infrastructure\MySQL\UserRepository;
 use Amdrija\RealEstate\Application\Interfaces\IAgencyRepository;
@@ -24,6 +25,7 @@ use Amdrija\RealEstate\Application\Interfaces\IHeatingTypeRepository;
 use Amdrija\RealEstate\Application\Interfaces\IMicroLocationRepository;
 use Amdrija\RealEstate\Application\Interfaces\IMunicipalityRepository;
 use Amdrija\RealEstate\Application\Interfaces\IPerkRepository;
+use Amdrija\RealEstate\Application\Interfaces\IStatsRepository;
 use Amdrija\RealEstate\Application\Interfaces\IStreetRepository;
 use Amdrija\RealEstate\Application\Interfaces\IUserRepository;
 use Amdrija\RealEstate\Application\Models\Agency;
@@ -38,6 +40,7 @@ use Amdrija\RealEstate\Framework\Router;
 use Amdrija\RealEstate\MVC\Controllers\AgencyController;
 use Amdrija\RealEstate\MVC\Controllers\EstateController;
 use Amdrija\RealEstate\MVC\Controllers\MicroLocationController;
+use Amdrija\RealEstate\MVC\Controllers\StatsController;
 use Amdrija\RealEstate\MVC\Controllers\StreetController;
 use Amdrija\RealEstate\MVC\Controllers\UserController;
 use Amdrija\RealEstate\MVC\Controllers\HomeController;
@@ -77,6 +80,7 @@ class Bootstrap
         DependencyInjectionContainer::registerClass(MicroLocationController::class);
         DependencyInjectionContainer::registerClass(AgencyController::class);
         DependencyInjectionContainer::registerClass(StreetController::class);
+        DependencyInjectionContainer::registerClass(StatsController::class);
     }
 
     public static function RegisterServices()
@@ -103,6 +107,7 @@ class Bootstrap
         DependencyInjectionContainer::register(IPerkRepository::class, PerkRepository::class);
         DependencyInjectionContainer::register(IMicroLocationRepository::class, MicroLocationRepository::class);
         DependencyInjectionContainer::register(IMunicipalityRepository::class, MunicipalityRepository::class);
+        DependencyInjectionContainer::register(IStatsRepository::class, StatsRepository::class);
     }
 
     public static function RegisterMiddleware()
@@ -244,6 +249,18 @@ class Bootstrap
             'GET',
             '/favourites',
             ['controller' => EstateController::class, 'action' => 'favourites', 'middleware' => [AuthenticationMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/stats/get',
+            ['controller' => StatsController::class, 'action' => 'getStats', 'middleware' => [AuthenticationMiddleware::class]]
+        );
+
+        Router::register(
+            'GET',
+            '/stats',
+            ['controller' => StatsController::class, 'action' => 'getStatsIndex', 'middleware' => [AuthenticationMiddleware::class]]
         );
     }
 
