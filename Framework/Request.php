@@ -69,7 +69,7 @@ class Request
 
     public function deseralizeBody(string $className): object
     {
-        return ArraySerializer::deserialize($className, $this->getBody());
+        return ArraySerializer::deserializeForBody($className, $this->getBody());
     }
 
     /**

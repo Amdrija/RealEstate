@@ -64,7 +64,7 @@
             <label class="" for="constructionDate-input">Construction date</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">
                 <span class="uk-form-icon uk-form-icon" uk-icon="icon: calendar"></span>
-                <input class="uk-input uk-width-1-1" type="date" value="<?= $estate->constructionDate->format("m/d/Y")?>" id="constructionDate-input" name="constructionDate" required>
+                <input class="uk-input uk-width-1-1" type="date" value="<?= $estate->constructionDate->format("Y-m-d")?>" id="constructionDate-input" name="constructionDate" required>
             </div>
             <label class="" for="condition-input">Condition</label>
             <div class="uk-inline uk-margin-bottom uk-width-1-1 uk-padding-small uk-padding-remove-horizontal">

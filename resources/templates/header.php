@@ -5,18 +5,23 @@
             <div class="uk-navbar-left">
                 <a class="uk-navbar-item uk-logo uk-margin-top-small" href="/"><img src="/vectors/logo.svg" uk-svg class="logo"></a>
                 <ul class="uk-navbar-nav">
-                    <li class="uk-active"><a href="#">Active</a></li>
-                    <li>
-                        <a href="#">Parent</a>
-                        <div class="uk-navbar-dropdown">
-                            <ul class="uk-nav uk-navbar-dropdown-nav">
-                                <li class="uk-active"><a href="#">Active</a></li>
-                                <li><a href="#">Item</a></li>
-                                <li><a href="#">Item</a></li>
-                            </ul>
-                        </div>
-                    </li>
+                    <li><a href="/search">Search</a></li>
                     <li><a href="/estates/userList">Your estates</a></li>
+                    <?php use Amdrija\RealEstate\Application\Services\LoginService;
+
+                    if(LoginService::isAdminSession()): ?>
+                        <li>
+                            <a href="/admin/users">Admin controls</a>
+                            <div class="uk-navbar-dropdown">
+                                <ul class="uk-nav uk-navbar-dropdown-nav">
+                                    <li><a href="/admin/users">Users</a></li>
+                                    <li><a href="/admin/streets">Streets</a></li>
+                                    <li><a href="/admin/microLocations">Micro locations</a></li>
+                                    <li><a href="/admin/agencies">Agencies</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    <?php endif;?>
                 </ul>
 
             </div>
