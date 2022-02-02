@@ -371,7 +371,7 @@ class EstateRepository extends Repository implements IEstateRepository
                 $row['floor'],
                 $row['description'],
                 $row['price'],
-                $averagePriceByMicroLocation[$row['microLocationId']],
+                isset($averagePriceByMicroLocation[$row['microLocationId']]) ? $averagePriceByMicroLocation[$row['microLocationId']] : 0,
                 $row['images'],
                 $row['sold']
             );
@@ -430,7 +430,7 @@ class EstateRepository extends Repository implements IEstateRepository
 
     public function sellEstate(string $id)
     {
-        $statement = $this->pdo->prepare("UPDATE realEstate.Estate SET sold = 1 AND dateSold = NOW() WHERE id = :id");
+        $statement = $this->pdo->prepare("UPDATE realEstate.Estate SET Estate.sold = 1, Estate.dateSold = NOW() WHERE id = :id");
         $statement->execute(['id'=>$id]);
     }
 

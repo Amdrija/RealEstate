@@ -14,7 +14,7 @@ use Amdrija\RealEstate\Application\Models\User;
 <?php if(is_null($user->agencyId)):?>
     <form name="getStats" action="" method="GET" class="uk-padding uk-padding-remove-horizontal">
         <label class="" for="microLocation-input">Micro location</label>
-        <div class="uk-inline uk-margin-left">
+        <div class="uk-width-small">
             <select class="uk-select" required name="microLocationId" id="microLocation-input">
                 <option value="">Choose micro location...</option>
                 <?php /* @var $microLocation MicroLocation */?>
@@ -23,7 +23,9 @@ use Amdrija\RealEstate\Application\Models\User;
                 <?php endforeach; ?>
             </select>
         </div>
-        <input type="submit" id="get-stats-button" class="uk-button uk-button-primary uk-margin-left" value="Get Stats">
+        <div class="uk-margin-top">
+            <input type="submit" id="get-stats-button" class="uk-button uk-button-primary" value="Get Stats">
+        </div>
     </form>
 <?php endif;?>
 
@@ -45,7 +47,7 @@ use Amdrija\RealEstate\Application\Models\User;
             data: {
                 labels: <?= json_encode($stats->labels)?>,
                 datasets: [{
-                    label: '# of Votes',
+                    label: 'Estates sold',
                     data: <?= json_encode($stats->values)?>,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)'

@@ -140,7 +140,7 @@ class EstateController extends FrontController
                 ]);
         }
 
-        return new RedirectResponse("/");
+        return new RedirectResponse("/estates/userList");
     }
 
     public function editEstateIndex(array $parameters): Response

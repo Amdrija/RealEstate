@@ -38,9 +38,8 @@ use Amdrija\RealEstate\Application\RequestModels\Estate\EstateSingle; ?>
                 <p>Heating: <?= $estate->heating?></p>
             </div>
         </div>
-        <hr>
-        <hr>
         <div class="">
+            <hr>
             <h2 class="uk-text-lead">Perks</h2>
             <fieldset class="uk-fieldset uk-padding-small uk-padding-remove-horizontal uk-margin-bottom uk-grid-small uk-text-left uk-child-width-1-3" uk-grid>
                 <input class="uk-checkbox uk-hidden" type="checkbox" name="perks[]" checked value="">
@@ -51,6 +50,7 @@ use Amdrija\RealEstate\Application\RequestModels\Estate\EstateSingle; ?>
             </fieldset>
         </div>
         <div class="">
+            <hr>
             <h2 class="uk-text-lead">Description</h2>
             <p><?= $estate->description?></p>
         </div>

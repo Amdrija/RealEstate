@@ -171,7 +171,7 @@ class EstateService
             throw new EstateNotFoundException();
         }
 
-        if ($this->estateRepository->countFavourites($estate, $user) >= self::MAX_FAVOURITE_COUNT) {
+        if ($this->estateRepository->countFavourites($user) >= self::MAX_FAVOURITE_COUNT) {
             throw new MaximumFavouriteEstatesException();
         }
 

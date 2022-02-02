@@ -11,7 +11,7 @@
 
 ?>
 <div class="uk-margin-auto login-modal uk-margin-top">
-    <h1 class="uk-text-center">Add Estate</h1>
+    <h1 class="uk-text-center">Edit Estate</h1>
     <?php use Amdrija\RealEstate\Application\Models\Agency;
     use Amdrija\RealEstate\Application\Models\BusLine;
     use Amdrija\RealEstate\Application\Models\City;
