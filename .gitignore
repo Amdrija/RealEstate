@@ -2,3 +2,5 @@
 /public/img
 /.idea
 .env
+/database
+/uploads
